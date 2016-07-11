@@ -1,11 +1,9 @@
-#if defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) \
- || defined(__TOS_WIN__) || defined(__WINDOWS__)
-/* Compiling for Windows */
-#ifndef __WINDOWS__
-#define __WINDOWS__
+#if defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(__WINDOWS__)
+    #ifndef __WINDOWS__
+        #define __WINDOWS__
+    #endif
+    #include <windows.h>
 #endif
-#  include <windows.h>
-#endif/* Predefined Windows macros */
 
 #include "graphics.h"
 
@@ -21,9 +19,6 @@ int main()
 
     return 0;
 }
-
-/*#include <windows.h>
-extern "C" _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;*/
 
 /* TODO:
 

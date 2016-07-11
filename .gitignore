@@ -1,17 +1,9 @@
-archive/
 bin/
 build/
 lib/
 obj/
 *.o
 *.so
-libnoise-master/
-build-linux/
-
-## Codeblocks files
-*.cbp
-*.depend
-*.layout
 
 ## Windows
 *.dll

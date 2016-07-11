@@ -1,5 +1,13 @@
 #include "shader.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+
 int loadShader(const char* shader_filepath, GLuint &Shader)
 {
     // Read shader code
@@ -66,5 +74,3 @@ GLuint loadShaders(const char * vertex_filepath, const char * fragment_filepath)
 
 	return Program;
 }
-
-

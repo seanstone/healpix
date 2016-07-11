@@ -5,11 +5,11 @@ int graphics::init()
 {
     lastTime = glfwGetTime();
 
-	if(!glfwInit()){fprintf(stderr, "Failed to initialize GLFW\n");return -1;} // Initialise GLFW
+	if(!glfwInit()){printf("Failed to initialize GLFW\n");return -1;} // Initialise GLFW
   std::cout<< "GLFW initialized\n";
     initWindow();
   std::cout<< "Window initialized\n";
-	if(glewInit() != GLEW_OK) {fprintf(stderr, "Failed to initialize GLEW\n");return -1;} // Initialize GLEW
+	if(glewInit() != GLEW_OK) {printf("Failed to initialize GLEW\n");return -1;} // Initialize GLEW
   std::cout<< "GLEW initialized\n";
     initOptions();
     initProgram();
@@ -124,13 +124,8 @@ void graphics::draw()
 
 int graphics::cleanup()
 {
-    // Delete textures
     glDeleteTextures(1, &Texture);
-
-    // Delete program
 	glDeleteProgram(Program);
-
-    // Terminate GLFW
 	glfwTerminate();
 
 	return 0;
