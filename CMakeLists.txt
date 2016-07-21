@@ -30,8 +30,6 @@ endif()
 add_executable(ExoEarth ${SOURCES})
 
 if(WIN32)
-	#SET(CMAKE_C_COMPILER C:/MinGW/bin/gcc)
-	#SET(CMAKE_CXX_COMPILER C:/MinGW/bin/g++)
 	target_link_libraries(ExoEarth glfw3 glew32 opengl32 libnoise)
 else()
 	target_link_libraries(ExoEarth glfw GLEW GL noise)

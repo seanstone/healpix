@@ -2,7 +2,7 @@
 
 #define PI 3.1415926535897932384626433832795
 
-uniform vec4 Rotor;
+//uniform vec4 Rotor;
 uniform mat4 MVP;
 attribute vec3 VertexXYZ;
 attribute vec2 VertexUV;
@@ -29,8 +29,8 @@ void main()
 
 	//rotated = Rotor * VertexXYZ * ~Rotor
     //vec4 rotated = product(product(Rotor,vec4(VertexXYZ, 0)),conjugate(Rotor));
-    vec4 rotated = vec4(VertexXYZ, 0);
-    gl_Position = vec4(0.3*rotated.x*768/1024, 0.3*rotated.y, 0.3*rotated.z, 1);
-    //gl_Position = MVP * vec4(VertexXYZ, 1);
+    //vec4 rotated = vec4(VertexXYZ, 0);
+    //gl_Position = vec4(0.3*rotated.x*768/1024, 0.3*rotated.y, 0.3*rotated.z, 1);
+    gl_Position = MVP * vec4(VertexXYZ, 1);
 	UV = VertexUV;
 }

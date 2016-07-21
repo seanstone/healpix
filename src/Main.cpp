@@ -5,17 +5,12 @@
     #include <windows.h>
 #endif
 
-#include "graphics.h"
-
-#include <iostream>
-#include <ctime>
-
-using namespace std;
+#include "Graphics.hpp"
 
 int main()
 {
-    graphics Graphics;
-    Graphics.loop();
+    Graphics graphics;
+    graphics.loop();
 
     return 0;
 }

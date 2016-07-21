@@ -1,27 +1,28 @@
-#include "view.h"
+#include "View.hpp"
 
 #include <iostream>
 
-void view::inputs(GLFWwindow* Window)
+void View::inputs(GLFWwindow* window)
 {
-    static float lastTime = glfwGetTime();
+    /*static float lastTime = glfwGetTime();
     float currentTime = glfwGetTime();
 
     // Cursor position
-    double u, v; glfwGetCursorPos(Window, &u, &v);
+    double u, v; glfwGetCursorPos(window, &u, &v);
     float x = 2*u/Width-1.0, y = -2*v/Height+1.0;
 
     // Rotate
-    if (glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
     {
         quat RotateVector = ~Rotor * ((u-Width/2)*quat(0,-1,0) + (v-Height/2)*quat(-1,0,0)) * Rotor;
         Rotor *= rotor(RotationSpeed, RotateVector);
     }
 
-    lastTime = currentTime;
+    lastTime = currentTime;*/
 }
 
-mat4 view::Simple()
+/*
+mat4 View::Simple()
 {
     mat4 ProjectionMatrix = mat4(0.3);
     ProjectionMatrix[0][0] *= Height/Width;
@@ -31,7 +32,7 @@ mat4 view::Simple()
 	return ProjectionMatrix * ViewMatrix;
 }
 
-mat4 view::Orthographic(float magnification, float near, float far)
+mat4 View::Orthographic(float magnification, float near, float far)
 {
     mat4 ProjectionMatrix = mat4(magnification);
     //ProjectionMatrix[0][0] *= Height/Width;
@@ -41,8 +42,9 @@ mat4 view::Orthographic(float magnification, float near, float far)
 
 	return ProjectionMatrix * ViewMatrix;
 }
+*/
 
-mat4 view::Perspective(double fovy, double aspect, double near, double far)
+mat4 View::Perspective(double fovy, double aspect, double near, double far)
 {
 	double tanHalfFovy = tan(fovy / 2.0);
 
@@ -55,7 +57,7 @@ mat4 view::Perspective(double fovy, double aspect, double near, double far)
 	return P;
 }
 
-mat4 view::lookAt(vec3 const & eye, vec3 const & center, vec3 const & up)
+mat4 View::lookAt(vec3 const & eye, vec3 const & center, vec3 const & up)
 {
 	vec3 f = normalize(vec3(center - eye));
 	vec3 s = normalize(cross(f, up));

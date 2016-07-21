@@ -1,7 +1,13 @@
 #ifndef VEC_H_INCLUDED
 #define VEC_H_INCLUDED
 
-#include <iostream>
+#define _USE_MATH_DEFINES
+#include <math.h>
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+    #define M_PI_2 (M_PI/2.0)
+    #define M_PI_4 (M_PI/4.0)
+#endif
 
 // Include GLM
 #define GLM_FORCE_RADIANS

@@ -1,4 +1,4 @@
-#include "shader.h"
+#include "Shader.hpp"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,7 +19,7 @@ int loadShader(const char* shader_filepath, GLuint &Shader)
 		while(getline(ShaderStream, Line)) ShaderCode += "\n" + Line;
 		ShaderStream.close();
 	}
-	else { printf("Failed to open %s.\n", shader_filepath); getchar(); return -1;}
+	else { printf("Failed to open %s.\n", shader_filepath); getchar(); return -1; }
 
     // Compile shader
 	printf("Compiling shader: %s\n", shader_filepath);
@@ -33,8 +33,8 @@ int loadShader(const char* shader_filepath, GLuint &Shader)
 	glGetShaderiv(Shader, GL_INFO_LOG_LENGTH, &InfoLogLength);
 	if (InfoLogLength > 0)
     {
-		std::vector<char> ShaderErrorMessage(InfoLogLength+1);
-		glGetShaderInfoLog(Shader, InfoLogLength, NULL, &ShaderErrorMessage[0]);
+		char ShaderErrorMessage[InfoLogLength+1];
+		glGetShaderInfoLog(Shader, InfoLogLength, NULL, ShaderErrorMessage);
 		printf("%s\n", &ShaderErrorMessage[0]);
 	}
 
@@ -64,8 +64,8 @@ GLuint loadShaders(const char * vertex_filepath, const char * fragment_filepath)
 	glGetProgramiv(Program, GL_INFO_LOG_LENGTH, &InfoLogLength);
 	if (InfoLogLength > 0)
     {
-		std::vector<char> ProgramErrorMessage(InfoLogLength+1);
-		glGetProgramInfoLog(Program, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+		char ProgramErrorMessage[InfoLogLength+1];
+		glGetProgramInfoLog(Program, InfoLogLength, NULL, ProgramErrorMessage);
 		printf("%s\n", &ProgramErrorMessage[0]);
 	}
 
