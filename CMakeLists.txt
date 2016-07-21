@@ -4,23 +4,20 @@ project(ExoEarth)
 
 # Include headers
 include_directories(include)
-#include_directories(vec)
-#include_directories(healpix)
 
 # Sources
 file(GLOB SOURCES "src/*.cpp")
-#file(GLOB SOURCES "healpix/*.cpp")
 
 option(DEBUG_MODE "Enable debug flags an others" OFF)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/)
 
-link_directories(${CMAKE_BINARY_DIR}/../lib)
+link_directories(${CMAKE_BINARY_DIR}/lib)
 
 # setup some debug flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -W -pedantic -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -W -pedantic -Wextra")
 if(DEBUG_MODE)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O -g")
 else()

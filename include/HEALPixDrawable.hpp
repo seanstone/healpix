@@ -2,32 +2,50 @@
 #define HEALPIXDRAWABLE_HPP
 
 #include "HEALPix.hpp"
-#include "Drawable.hpp"
 
-class HEALPixDrawble : public HEALPix, public Drawable
+class HEALPixDrawble : public HEALPix
 {
-    HEALPixDrawble(int h, int k, float scaleP, float scaleQ, int depth, float r)
-    {
-        genVertexXYZ();
-        for(int f=0; f<HK(); f++) Facet[f].genVertexUV();
-    }
-    ~HEALPixDrawble()
-    {
-        delete[] Facet;
-        glDeleteBuffers(1, &VBO_VertexIndex);
-    }
+    // Data arrays
+    GLfloat* VertexPosition_Data;
+    GLfloat* VertexTextureUV_Data;
 
-    void genVertexXYZ();
+    void genVertexUV();
 
-    void update();
+    // VBOs
+    GLuint VertexPosition_VBO;
+    GLuint VertexTextureUV_VBO;
+    GLuint MeshIndex_VBO;
+    void updateVertexPosition();
+    void updateVertexTextureUV();
 
-    GLuint VBO_VertexIndex;
+    // Uniforms and attributes
     GLuint Uniform_Rotor;
     GLuint Uniform_Sampler;
     GLuint Uniform_MVP;
-    GLuint In_VertexXYZ;
-    GLuint In_VertexUV;
-    void initVBO();
+    GLuint In_VertexPosition;
+    GLuint In_VertexTextureUV;
+
+    void initData()
+    {
+        VertexTextureUV_Data  = new float[NumVertex()*2];
+    }
+
+    void initVBO()
+    {
+        glGenBuffers(1, &VertexPosition_VBO);
+        glGenBuffers(1, &VertexTextureUV_VBO);
+        updatePosition();
+    }
+
+    ~HEALPixDrawble()
+    {
+        glDeleteBuffers(1, &VertexPosition_VBO);
+        glDeleteBuffers(1, &VertexTextureUV_VBO);
+        glDeleteBuffers(1, &VBO_VertexIndex);
+        delete[] VertexPosition_Data;
+        delete[] VertexTextureUV_Data;
+    }
+
     void draw();
 };
 

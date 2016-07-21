@@ -1,7 +1,18 @@
-#include "HEALPix.hpp"
-#include <stdlib.h>
+#include "HEALPixDrawable.hpp"
 
-void HEALPix::initVBO()
+void HEALPixDrawable::updateVertexPosition()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, VertexTextureXYZ_VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*NumVertex()*3, VertexTextureXYZ_Data, GL_STATIC_DRAW);
+}
+
+void HEALPixDrawable::updateVertexTextureUV()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, VertexTextureUV_VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*NumVertex()*2, VertexTextureUV_Data, GL_DYNAMIC_DRAW);
+}
+
+void HEALPixDrawable::initVBO()
 {
     glGenBuffers(1, &VBO_VertexIndex);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_VertexIndex);
@@ -11,7 +22,7 @@ void HEALPix::initVBO()
     for(int f=0; f<HK(); f++) Facet[f].initVBO();
 }
 
-void HEALPix::draw()
+void HEALPixDrawable::draw()
 {
     // Enable attributes
     glEnableVertexAttribArray(In_VertexXYZ);
