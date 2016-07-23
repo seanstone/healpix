@@ -1,13 +1,14 @@
 #ifndef QUAD_H_INCLUDED
 #define QUAD_H_INCLUDED
 
-#include "Vec.hpp"
+#include "PulsarMath.hpp"
 
 template <int Dim>
 struct Quad
 {
-    float4*         Vertices;
+    float3*         Vertices;
     unsigned int*   Indices;
+    float3*         Normals;
 
     inline int NumPixel()                   { return Dim*Dim;; }
     inline int NumVertex()                  { return (Dim+1)*(Dim+1); }
@@ -83,20 +84,30 @@ struct Quad
 
         int i = 0;
         int3 triangle, lastTraingle;
-        float2 side1, side2;
+        float3 side1, side2;
         for (int x=0; x<NumTriangleStripIndex()-2; x++)
         {
             triangle[0] = triangleStripIndex[x];
             triangle[1] = triangleStripIndex[x+1];
             triangle[2] = triangleStripIndex[x+2];
-            side1 = IJ(triangle[1]) - IJ(triangle[0]);
-            side2 = IJ(triangle[2]) - IJ(triangle[0]);
+            side1 = float3(IJ(triangle[1]) - IJ(triangle[0]), 0);
+            side2 = float3(IJ(triangle[2]) - IJ(triangle[0]), 0);
 
             if (1 - abs(glm::dot(side1, side2)) / (glm::length(side1) * glm::length(side2)) > 1e-6 && sort(triangle) != sort(lastTraingle))
             {
-                Indices[i++] = triangle[0];
-                Indices[i++] = triangle[1];
-                Indices[i++] = triangle[2];
+                // Ensure triangles have the right orientation
+                if ( dot (cross(side1, side2), vec3(0, 0, 1)) < 0 )
+                {
+                    Indices[i++] = triangle[0];
+                    Indices[i++] = triangle[1];
+                    Indices[i++] = triangle[2];
+                }
+                else
+                {
+                    Indices[i++] = triangle[2];
+                    Indices[i++] = triangle[1];
+                    Indices[i++] = triangle[0];
+                }
                 lastTraingle = triangle;
             }
         }
@@ -105,7 +116,7 @@ struct Quad
 
     void createBuffers()
     {
-        Vertices = new float4 [NumVertex()];
+        Vertices = new float3 [NumVertex()];
         Indices = new unsigned int [NumIndex()];
     }
 
@@ -113,12 +124,29 @@ struct Quad
     {
         delete [] Vertices;
         delete [] Indices;
+        delete [] Normals;
     }
 
     void genVertices()
     {
         for (int n=0; n<NumVertex(); n++)
-            Vertices[n] = float4(IJ(n).x, IJ(n).y, 0, 1);
+            Vertices[n] = float3(IJ(n).x, IJ(n).y, 0);
+    }
+
+    void genNormals()
+    {
+        for(int n=0; n<NumVertex(); n++)
+            Normals[n] = float3(0, 0, 1);
+    }
+
+    void init()
+    {
+        Vertices = new float3[NumVertex()];
+        Indices = new unsigned int[NumIndex()];
+        Normals = new float3[NumVertex()];
+        genVertices();
+        genIndices();
+        genNormals();
     }
 };
 

@@ -7,9 +7,9 @@ template <int Dim, int H = 4, int K = 3>
 struct HEALPix
 {
     // Data arrays
-    float4*         Vertices;
+    float3*         Vertices;
     unsigned int*   Indices;
-    float4*         Normals;
+    float3*         Normals;
     inline int NumVertex()      { return HK * Facet[0].NumVertex(); }
     inline int NumIndex()       { return HK * Facet[0].NumIndex(); }
 
@@ -19,27 +19,27 @@ struct HEALPix
 
     // Parameters
     float           Radius;
-    float4          Origin;
+    float3          Origin;
 
-    HEALPix(float Radius = 1.f, float4 Origin = float4(0), float ScaleP = 1.f, float ScaleQ = 1.f) : Radius(Radius), Origin(Origin)
+    HEALPix(float Radius = 1.f, float3 Origin = float3(0), float ScaleP = 1.f, float ScaleQ = 1.f) : Radius(Radius), Origin(Origin)
     {
-        /*Facet = new Quad<Dim>[HK];
+        Facet = new Quad<Dim>[HK];
 
-        Vertices    = new float4    [Facet[0].NumVertex()*HK];
+        Vertices    = new float3    [Facet[0].NumVertex()*HK];
         Indices     = new unsigned int [Facet[0].NumIndex()*HK];
-        Normals     = new float4    [Facet[0].NumVertex()*HK];
+        Normals     = new float3    [Facet[0].NumVertex()*HK];
 
         for (int f=0; f<HK; f++)
         {
             Facet[f].Vertices   = Vertices + f * Facet[0].NumVertex();
             Facet[f].Indices    = Indices + f * Facet[0].NumIndex();
+            Facet[f].Normals    = Normals + f * Facet[0].NumVertex();
             Facet[f].genIndices();
             for(int n=0; n<Facet[0].NumIndex(); n++)
                 Facet[f].Indices[n] += f * Facet[0].NumVertex();
         }
-
         genVertices();
-        genNormals();*/
+        genNormals();
     }
     ~HEALPix()
     {
@@ -85,11 +85,11 @@ struct HEALPix
                 float costht    = sqrt(1 - sintht*sintht);
 
                 // Assign vertex coordinates
-                Facet[f].Vertices[n] = Origin + Radius * float4(costht * cos(phi), costht * sin(phi), sintht, 1);
+                Facet[f].Vertices[n] = Origin + Radius * float3(costht * cos(phi), costht * sin(phi), sintht);
 
                 // For testing
-                //Facet[f].Vertices[n] = float4(-2, 0, 0, 0) + float4(x, y, -3, 1);
-                //Facet[f].Vertices[n] = float4(-2, 0, 0, 0) + float4(phi, asin(sintht), -3, 1);
+                //Facet[f].Vertices[n] = float3(-2, 0, 0, 0) + float3(x, y, -3, 1);
+                //Facet[f].Vertices[n] = float3(-2, 0, 0, 0) + float3(phi, asin(sintht), -3, 1);
             }
 
         // For testing
@@ -99,11 +99,11 @@ struct HEALPix
             Vertices[n]            += Origin;
             glm::mat4 rotation = glm::rotate((float) M_PI_2/2.f*4.f, float3(0,1,0));
             //Vertices[n] = rotation * Vertices[n];
-        }
-        for(int f=0; f<HK; f++)
+        }*/
+        /*for(int f=0; f<HK; f++)
             for(int n=0; n<Facet[f].NumVertex(); n++)
-                if ( f/H != 0 ) Facet[f].Vertices[n] = float4(0);
-        */
+                if ( f != 2 ) Facet[f].Vertices[n] = float3(0);*/
+
     }
 
     void genNormals()
