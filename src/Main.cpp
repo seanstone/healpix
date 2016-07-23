@@ -138,6 +138,8 @@ MainWindow::~MainWindow()
 	delete rootNode;
 }
 
+float rotateVal = 0;
+
 void MainWindow::render()
 {
 	renderer.clearScreen();
@@ -151,7 +153,7 @@ void MainWindow::render()
 	//transform.scale(vec3(1,1,1));
 	//transform.translate(vec3(0,0,0));
 	//transform.rotate(vec3(cos(val*3.14)*3.14,sin(val*3.14)*3.14,0));
-	transform.rotate(vec3(0, val*3.14f, 0));
+	transform.rotate(vec3(0, rotateVal*3.14f, 0));
 
 	rootNode->setTransform(transform);
 
@@ -182,8 +184,9 @@ void MainWindow::update()
 	// 	exit(0);
 
 	//Mouse movements
+
 	vec2 mousePos = getMousePos();
-	if(getMouseState(Button::ButtonLeft) == true)
+	if(getMouseState(Button::ButtonLeft))
 	{
 		vec2 diff = mousePos - lastMousePos;
 
@@ -195,6 +198,16 @@ void MainWindow::update()
 
 		//cout << direction.x << "\t" << direction.y << "\t" << direction.z << endl;
 	}
+	else if(getMouseState(Button::ButtonRight))
+	{
+		//vec2 diff = mousePos - lastMousePos;
+		rotateVal += ((float)mousePos.x/WINDOW_WIDTH - 0.5) * 1e-2;
+		//Transform transform;
+		//transform.rotate(vec3(0, rotateVal, 0));
+		//rootNode->setTransform(transform);
+		//rootNode->render(camera);
+	}
+
 	lastMousePos = mousePos;
 
 	//cout << camera->getPosition().y << endl;
