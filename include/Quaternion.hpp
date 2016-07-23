@@ -132,9 +132,12 @@ public:
 
 		bool leading = true;
 		if (Q.w!=0) { out << Q.w; leading = false; }
-		if (Q.x>0 && leading == false) out << "+"; if (Q.x!=0) { out << Q.x << "i"; leading = false; }
-		if (Q.y>0 && leading == false) out << "+"; if (Q.y!=0) { out << Q.y << "j"; leading = false; }
-		if (Q.z>0 && leading == false) out << "+"; if (Q.z!=0) out << Q.z << "k";
+		if (Q.x>0 && leading == false) out << "+";
+		if (Q.x!=0) { out << Q.x << "i"; leading = false; }
+		if (Q.y>0 && leading == false) out << "+";
+		if (Q.y!=0) { out << Q.y << "j"; leading = false; }
+		if (Q.z>0 && leading == false) out << "+";
+		if (Q.z!=0) out << Q.z << "k";
 		return out;
 	}
 

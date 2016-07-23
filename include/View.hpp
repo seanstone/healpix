@@ -4,6 +4,13 @@
 #include "Quaternion.hpp"
 #include "Vec.hpp"
 
+// GLEW
+#include <GL/glew.h>
+
+// GLFW
+#define GLFW_DLL
+#include <GLFW/glfw3.h>
+
 struct View
 {
     float width = 1024, height = 768;

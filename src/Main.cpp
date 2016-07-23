@@ -5,11 +5,14 @@
     #include <windows.h>
 #endif
 
+#include <stdio.h>
 #include "Graphics.hpp"
 
 int main()
 {
     Graphics graphics;
+    printf("Init\n");
+    graphics.init();
     graphics.loop();
 
     return 0;

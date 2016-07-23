@@ -11,7 +11,7 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "View.hpp"
-#include "HEALPix.hpp"
+#include "HEALPixDrawable.hpp"
 
 class Graphics
 {
@@ -20,28 +20,18 @@ class Graphics
 
     float lastTime;
 
-    GLuint program;
-    GLuint heightMapTexture;
-
+    HEALPixDrawable healpix;
     View view;
-    HEALPix<7> healpix;
 
 public:
     int init();
     int initWindow();
     int initOptions();
-    int initProgram();
-    int initTexture();
     int loop();
     void inputs();
     void draw();
     int terminate();
     void update();
-
-    Graphics(): healpix(3.0)
-    {
-        init();
-    }
 
     ~Graphics()
     {

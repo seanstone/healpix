@@ -8,7 +8,7 @@ struct HEALPix
 {
     // Data arrays
     float4*         Vertices;
-    int*            Indices;
+    unsigned int*   Indices;
     float4*         Normals;
     inline int NumVertex()      { return HK * Facet[0].NumVertex(); }
     inline int NumIndex()       { return HK * Facet[0].NumIndex(); }
@@ -23,10 +23,10 @@ struct HEALPix
 
     HEALPix(float Radius = 1.f, float4 Origin = float4(0), float ScaleP = 1.f, float ScaleQ = 1.f) : Radius(Radius), Origin(Origin)
     {
-        Facet = new Quad<Dim>[HK];
+        /*Facet = new Quad<Dim>[HK];
 
         Vertices    = new float4    [Facet[0].NumVertex()*HK];
-        Indices     = new int       [Facet[0].NumIndex()*HK];
+        Indices     = new unsigned int [Facet[0].NumIndex()*HK];
         Normals     = new float4    [Facet[0].NumVertex()*HK];
 
         for (int f=0; f<HK; f++)
@@ -39,7 +39,7 @@ struct HEALPix
         }
 
         genVertices();
-        genNormals();
+        genNormals();*/
     }
     ~HEALPix()
     {

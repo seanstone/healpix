@@ -2,51 +2,90 @@
 #define HEALPIXDRAWABLE_HPP
 
 #include "HEALPix.hpp"
+#include "GLAttribute.hpp"
 
-class HEALPixDrawble : public HEALPix
+#include "Shader.hpp"
+#include "Texture.hpp"
+
+struct HEALPixDrawable : public HEALPix<100>
 {
-    // Data arrays
-    GLfloat* VertexPosition_Data;
-    GLfloat* VertexTextureUV_Data;
+    // Attributes
+    Attribute<GLfloat>  vertexPosition;
+    Attribute<GLfloat>  vertexTextureUV;
 
-    void genVertexUV();
+    // Indices
+    Index               meshIndex;
 
-    // VBOs
-    GLuint VertexPosition_VBO;
-    GLuint VertexTextureUV_VBO;
-    GLuint MeshIndex_VBO;
-    void updateVertexPosition();
-    void updateVertexTextureUV();
+    // Uniforms
+    Uniform<GLint>      sampler;
+    Uniform<mat4>       MVP;
 
-    // Uniforms and attributes
-    GLuint Uniform_Rotor;
-    GLuint Uniform_Sampler;
-    GLuint Uniform_MVP;
-    GLuint In_VertexPosition;
-    GLuint In_VertexTextureUV;
+    // Texture
+    GLuint heightMapTexture;
 
-    void initData()
+    // Program
+    GLuint program;
+
+    HEALPixDrawable()
     {
-        VertexTextureUV_Data  = new float[NumVertex()*2];
+        //HEALPix();
+        //vertexPosition = Attribute<GLfloat>((float*)Vertices, 4 * NumVertex(), GL_STATIC_DRAW);
+        //vertexTextureUV = Attribute<GLfloat>(NULL, 2 * NumVertex(), GL_DYNAMIC_DRAW);
+        //meshIndex = Index(Indices, NumIndex(), GL_STATIC_DRAW);
     }
 
-    void initVBO()
+    void init()
     {
-        glGenBuffers(1, &VertexPosition_VBO);
-        glGenBuffers(1, &VertexTextureUV_VBO);
-        updatePosition();
+        program                 = loadShaders("glsl/vertex.glsl", "glsl/fragment.glsl");
+        sampler.id              = glGetUniformLocation  (program, "Sampler");
+        MVP.id                  = glGetUniformLocation  (program, "MVP");
+        vertexPosition.id       = glGetAttribLocation   (program, "VertexXYZ");
+        vertexTextureUV.id      = glGetAttribLocation   (program, "VertexUV");
+
+        // Use shader
+        glUseProgram(program);
+        initTexture();
     }
 
-    ~HEALPixDrawble()
+    ~HEALPixDrawable()
     {
-        glDeleteBuffers(1, &VertexPosition_VBO);
-        glDeleteBuffers(1, &VertexTextureUV_VBO);
-        glDeleteBuffers(1, &VBO_VertexIndex);
-        delete[] VertexPosition_Data;
-        delete[] VertexTextureUV_Data;
+        glDeleteTextures(1, &heightMapTexture);
+        glDeleteProgram(program);
     }
 
-    void draw();
+    void initTexture()
+    {
+        heightMapTexture = loadBMP("textures/earth.bmp");
+        glActiveTexture(GL_TEXTURE0); // Bind our texture in Texture Unit 0
+        glBindTexture(GL_TEXTURE_2D, heightMapTexture); // Set our sampler to use Texture Unit 0
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glUniform1i(sampler.id, 0);
+    }
+
+    void draw()
+    {
+        // Enable attributes
+        vertexPosition.enable();
+        vertexTextureUV.enable();
+
+        // Send VertexXYZ to OpenGL
+        glBindBuffer(GL_ARRAY_BUFFER, vertexPosition.vbo);
+        glVertexAttribPointer(vertexPosition.id, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+        // Send VertexUV to OpenGL
+        glBindBuffer(GL_ARRAY_BUFFER, vertexTextureUV.vbo);
+        glVertexAttribPointer(vertexTextureUV.id, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+        // Draw
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIndex.vbo);
+        glDrawElements(GL_TRIANGLES, NumIndex(), GL_UNSIGNED_INT, (void*)(0));
+
+        // Disable attributes
+        vertexPosition.disable();
+        vertexTextureUV.disable();
+    }
+
 };
 
 #endif

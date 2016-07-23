@@ -7,7 +7,7 @@ template <int Dim>
 struct Quad
 {
     float4*         Vertices;
-    int*            Indices;
+    unsigned int*   Indices;
 
     inline int NumPixel()                   { return Dim*Dim;; }
     inline int NumVertex()                  { return (Dim+1)*(Dim+1); }
@@ -28,7 +28,7 @@ struct Quad
         return i<j ? j*j + !(j&1)*(2*j-i) + (j&1)*i : i*i + !(i&1)*j + (i&1)*(2*i-j);
     }
 
-    int* genTriangleStripIndices(int* index)
+    unsigned int* genTriangleStripIndices(unsigned int* index)
     {
         int x = 0;
         for(int n = 0; n<NumPixel(); n++)
@@ -78,7 +78,7 @@ struct Quad
 
     void genIndices()
     {
-        int* triangleStripIndex = new int[NumTriangleStripIndex()];
+        unsigned int* triangleStripIndex = new unsigned int[NumTriangleStripIndex()];
         genTriangleStripIndices(triangleStripIndex);
 
         int i = 0;
@@ -106,7 +106,7 @@ struct Quad
     void createBuffers()
     {
         Vertices = new float4 [NumVertex()];
-        Indices = new int [NumIndex()];
+        Indices = new unsigned int [NumIndex()];
     }
 
     void deleteBuffers()

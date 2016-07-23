@@ -22,4 +22,11 @@ typedef glm::mat2 mat2;
 typedef glm::mat3 mat3;
 typedef glm::mat4 mat4;
 
+typedef vec4 float4;
+typedef vec3 float3;
+typedef vec2 float2;
+typedef glm::ivec4 int4;
+typedef glm::ivec3 int3;
+typedef glm::ivec2 int2;
+
 #endif // VEC_H_INCLUDED

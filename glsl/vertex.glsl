@@ -4,7 +4,7 @@
 
 //uniform vec4 Rotor;
 uniform mat4 MVP;
-attribute vec3 VertexXYZ;
+attribute vec4 VertexXYZ;
 attribute vec2 VertexUV;
 
 varying vec2 UV;
@@ -31,6 +31,6 @@ void main()
     //vec4 rotated = product(product(Rotor,vec4(VertexXYZ, 0)),conjugate(Rotor));
     //vec4 rotated = vec4(VertexXYZ, 0);
     //gl_Position = vec4(0.3*rotated.x*768/1024, 0.3*rotated.y, 0.3*rotated.z, 1);
-    gl_Position = MVP * vec4(VertexXYZ, 1);
+    gl_Position = MVP * vec4(VertexXYZ.xyz, 1);
 	UV = VertexUV;
 }
