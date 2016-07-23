@@ -2,6 +2,7 @@
 #define HEALPIX_H_INCLUDED
 
 #include "Quad.hpp"
+#include <noise/noise.h>
 
 template <int Dim, int H = 4, int K = 3>
 struct HEALPix
@@ -110,6 +111,22 @@ struct HEALPix
     {
         for(int n=0; n<NumVertex(); n++)
             Normals[n] = Vertices[n] - Origin;
+    }
+
+    void genTerrain(float2* uv)
+    {
+        //int rr = (rand()%100)/10;
+
+        static noise::module::Perlin terrainModule;
+        terrainModule.SetFrequency (0.9);
+        terrainModule.SetPersistence (0.6);
+
+        for(int i=0; i<NumVertex(); i++)
+        {
+            float3 xyz = Vertices[i];
+            uv[i].x = terrainModule.GetValue((xyz.x+1.52)*0.50, (xyz.y+1.52)*0.50, xyz.z*0.50) *0.25 + 0.33;
+            uv[i].y = uv[i].x;
+        }
     }
 };
 

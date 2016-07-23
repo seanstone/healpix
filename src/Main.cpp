@@ -44,7 +44,7 @@ MainWindow::MainWindow()
 	createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Earth");
 
 	renderer.init();
-	renderer.setClearColor(vec3(0, 0, 0.2));
+	renderer.setClearColor(vec3(0, 0, 0.1));
 
 	initMeshItem();
 	//initModelItem();
@@ -61,7 +61,7 @@ void MainWindow::initMeshItem()
 	bool result = true;
 	shader = new ThreeDShader;
 	result &= shader->addVertexShader(File::readAllText("data/shader/test.vs"));
-	result &= shader->addFragmentShader(File::readAllText("data/shader/BasicLighting.fs"));
+	result &= shader->addFragmentShader(File::readAllText("data/shader/BasicLighting2.fs"));
 	result &= shader->compile();
 	if(result == false)
 	{
@@ -70,28 +70,23 @@ void MainWindow::initMeshItem()
 	}
 
 	shader->Shader::bind();
-	shader->setParameter("pointLight.position",vec3(100, 100, 100));
+	shader->setParameter("pointLight.position",vec3(100, 100, -100));
 	shader->setParameter("pointLight.radiant",vec3(1e4));
 	shader->Shader::unbind();
 
 	HEALPix<64> healpix(3.f, float3(0,0,0));
 
-	float uv[healpix.NumVertex() * 2];
-	for (int i = 0; i < healpix.NumVertex()/3; i++)
-	{
-		uv[(i*3) * 2] = 0; uv[(i*3) * 2 + 1] = 0;
-		uv[(i*3+1) * 2] = 1; uv[(i*3+1) * 2 + 1] = 0;
-		uv[(i*3+2) * 2] = 0; uv[(i*3+2) * 2 + 1] = 1;
-	}
+	float2 uv[healpix.NumVertex()];
+	healpix.genTerrain(uv);
 
 	mesh = new Mesh;
 	mesh->setVertices((vec3*) healpix.Vertices, healpix.NumVertex());
 	mesh->setIndices(healpix.Indices, healpix.NumIndex());
-	mesh->setTextureCoord((vec2*)uv, healpix.NumVertex() * 2);
+	mesh->setTextureCoord((vec2*)uv, healpix.NumVertex());
 	mesh->setNormals((vec3*) healpix.Normals, healpix.NumVertex());
 
 	Image image;
-	image.load("data/texture/planks_oak.png");
+	image.load("data/texture/earth.png");
 	texture = new Texture;
 	texture->load(&image);
 	texture->enableMipmap(true);

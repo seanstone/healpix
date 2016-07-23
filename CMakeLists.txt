@@ -46,7 +46,6 @@ endif()
 
 # Copy data
 
-file(COPY glsl DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY textures DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY data DESTINATION ${CMAKE_BINARY_DIR})
 
 # http://voices.canonical.com/jussi.pakkanen/2013/03/26/a-list-of-common-cmake-antipatterns/
