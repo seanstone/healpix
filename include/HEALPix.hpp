@@ -124,7 +124,7 @@ struct HEALPix
         for(int i=0; i<NumVertex(); i++)
         {
             float3 xyz = Vertices[i];
-            uv[i].x = terrainModule.GetValue((xyz.x+1.52)*0.50, (xyz.y+1.52)*0.50, xyz.z*0.50) *0.25 + 0.33;
+            uv[i].x = terrainModule.GetValue((xyz.x+1.52)*0.50, (xyz.y+1.52)*0.50, xyz.z*0.50) *0.25 + 0.35;
             uv[i].y = uv[i].x;
         }
     }

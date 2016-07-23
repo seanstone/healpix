@@ -28,7 +28,7 @@ void main()
 		textureColor = vec4(1,1,1,1);
 
 	//Apply lighting
-	lightStrengthOnFragment += vec3(0.5);
+	//lightStrengthOnFragment += vec3(0.5);
 	vec3 renderedColor = textureColor.xyz * lightStrengthOnFragment;
 
 	//Gamma correction

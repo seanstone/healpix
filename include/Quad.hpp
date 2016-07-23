@@ -96,7 +96,7 @@ struct Quad
             if (1 - abs(glm::dot(side1, side2)) / (glm::length(side1) * glm::length(side2)) > 1e-6 && sort(triangle) != sort(lastTraingle))
             {
                 // Ensure triangles have the right orientation
-                if ( dot (cross(side1, side2), vec3(0, 0, 1)) < 0 )
+                if ( dot (cross(side1, side2), vec3(0, 0, 1)) > 0 )
                 {
                     Indices[i++] = triangle[0];
                     Indices[i++] = triangle[1];

@@ -50,9 +50,9 @@ MainWindow::MainWindow()
 	//initModelItem();
 
 	Projection projection;
-	projection.setProjection(radians(70.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.01f, 50.0f);
+	projection.setProjection(radians(90.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.01f, 50.0f);
 
-	camera = new Camera(vec3(0, 0.1, 5), vec3(0, 0, -1), vec3(0, 1, 0));
+	camera = new Camera(vec3(0, 0, 5), vec3(0, 0, -1), vec3(0, 1, 0));
 	camera->setProjection(projection);
 }
 
@@ -70,7 +70,7 @@ void MainWindow::initMeshItem()
 	}
 
 	shader->Shader::bind();
-	shader->setParameter("pointLight.position",vec3(100, 100, -100));
+	shader->setParameter("pointLight.position",vec3(100, -100, 50));
 	shader->setParameter("pointLight.radiant",vec3(1e4));
 	shader->Shader::unbind();
 
@@ -151,7 +151,7 @@ void MainWindow::render()
 	//transform.scale(vec3(1,1,1));
 	//transform.translate(vec3(0,0,0));
 	//transform.rotate(vec3(cos(val*3.14)*3.14,sin(val*3.14)*3.14,0));
-	//transform.rotate(vec3(0,val*3.14f,0));
+	transform.rotate(vec3(0, val*3.14f, 0));
 
 	rootNode->setTransform(transform);
 
