@@ -93,7 +93,7 @@ struct Quad
             side1 = float3(IJ(triangle[1]) - IJ(triangle[0]), 0);
             side2 = float3(IJ(triangle[2]) - IJ(triangle[0]), 0);
 
-            if (1 - abs(glm::dot(side1, side2)) / (glm::length(side1) * glm::length(side2)) > 1e-6 && sort(triangle) != sort(lastTraingle))
+            if (1 - abs(glm::dot(side1, side2)) / (glm::length(side1) * glm::length(side2)) > 1e-7 && sort(triangle) != sort(lastTraingle))
             {
                 // Ensure triangles have the right orientation
                 if ( dot (cross(side1, side2), vec3(0, 0, 1)) > 0 )

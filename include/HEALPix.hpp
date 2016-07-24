@@ -103,7 +103,7 @@ struct HEALPix
         }*/
         /*for(int f=0; f<HK; f++)
             for(int n=0; n<Facet[f].NumVertex(); n++)
-                if ( f != 2 ) Facet[f].Vertices[n] = float3(0);*/
+                if ( f != 7 ) Facet[f].Vertices[n] = float3(0);*/
 
     }
 
@@ -127,6 +127,22 @@ struct HEALPix
             uv[i].x = terrainModule.GetValue((xyz.x+1.52)*0.50, (xyz.y+1.52)*0.50, xyz.z*0.50) *0.25 + 0.35;
             uv[i].y = uv[i].x;
         }
+    }
+
+    void genTextureUV(float2* uv)
+    {
+        float u0;
+        for (int f=0; f<H*K; f++)
+            for (int i=0; i<Facet[f].NumVertex(); i++)
+            {
+                float3 xyz = -Facet[f].Vertices[i];
+                float tht = asin(xyz.y/Radius), phi = -atan2(xyz.z, xyz.x);
+                uv[f * Facet[0].NumVertex() + i].x = phi / 2 / M_PI + 0.5;
+                uv[f * Facet[0].NumVertex() + i].y = 0.5 + sin(tht) / 2; //0.5 + tht / M_PI;
+                if (i == 0) u0 = uv[i].x;
+                if (uv[i].x - u0 > 0.5) uv[i].x -= 1;
+                else if (uv[i].x - u0 < -0.5) uv[i].x += 1;
+            }
     }
 };
 
