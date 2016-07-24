@@ -18,7 +18,6 @@ uniform PointLight pointLight;
 const float M_PI = 3.14159265358979;
 const float M_PI_2 = M_PI/2.0;
 
-
 bool onLine = false;
 
 bool latLine(float lat)
@@ -45,7 +44,7 @@ bool lonLine(float lon)
 	return false;
 }
 
-
+/* For recovering pixel index
 
 int K = 3, H = 4;
 
@@ -57,7 +56,6 @@ float facet_xwidth()     {   return 2 * facet_xwidth_2();                       
 float facet_yheight()    {   return 2 * facet_yheight_2();                       }
 float x_c(int h, int k)  {   return h * facet_xwidth() + k * facet_xwidth_2();   }
 
-
 vec2 pixel(float tht, float phi)
 {
 	float x, y;
@@ -68,12 +66,6 @@ vec2 pixel(float tht, float phi)
 	}
 	else
 	{
-		/*float phi_c = x_c(0,0);
-		for(int f=0; f<H*K; f++)
-		{
-			int h = f%H, k = f/H;
-			if (abs(phi - x_c(h, k)) < abs(phi - phi_c)) phi_c = x_c(h, k);
-		}*/
 		float phi_c = 0;
 		for(int h=-H; h<H; h++)
 		{
@@ -117,6 +109,8 @@ bool xLine(float x)
 	}
 	return false;
 }
+
+*/
 
 void main()
 {

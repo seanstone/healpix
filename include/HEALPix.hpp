@@ -5,6 +5,12 @@
 #include "Sphere.hpp"
 #include <noise/noise.h>
 
+struct Pixel
+{
+    int f;
+    int2 ij;
+};
+
 template <int Dim, int H = 4, int K = 3>
 struct HEALPix : public Sphere
 {
@@ -54,42 +60,69 @@ struct HEALPix : public Sphere
     inline float facet_yheight_2()  {   return M_PI / (K+1);                                }
     inline float facet_xwidth()     {   return 2 * facet_xwidth_2();                        }
     inline float facet_yheight()    {   return 2 * facet_yheight_2();                       }
+    inline float2 facet_xydim()     {   return float2(facet_xwidth(), facet_yheight());     }
     inline float x_c(int h, int k)  {   return h * facet_xwidth() + k * facet_xwidth_2();   }
     inline float y_c(int k)         {   return (k - (K-1)/2.0f) * facet_yheight_2();        }
+    inline float2 xy_c(int f)       {   return float2(x_c(f%H,f/H), y_c(f/H));              }
     inline float y_x()              {   return M_PI_2 * (K-1) / H;                          }
     inline float sigma(float y)     {   return (K+1)/2.0f - fabs(y*H)/M_PI;                 }
+
+    float xy_c(float2 xy)
+    {
+        float2 xyc = xy / facet_xydim();
+        xyc = mat2({-1, -1, 1, -1}) * xyc;
+        // TODO
+    }
+
+    float2 XY(Pixel p)
+    {
+        // Generate coordinates relative to unit square centered at origin
+        float2 xy = (float2)p.ij/(float)Dim - float2(0.5);
+
+        // Displace square
+        xy += mat2({-1, -1, 1, -1}) * (xy_c(p.f) / facet_xydim());
+
+        // Rotate and scale square such that the width and height is one after rotation
+        xy = mat2({-1, 1, -1, -1}) / 2.0f * xy;
+
+        // Scale square
+        xy *= facet_xydim();
+
+        return xy;
+    }
+
+    float2 PhiSintht(float2 xy, int f)
+    {
+        int h = f%H, k = f/H;
+        float x = xy.x, y = xy.y;
+        float phi       = fabs(y) <= y_x() ?   x : x_c(h, k) + (x-x_c(h, k)) / sigma(y);
+        float sintht    = fabs(y) <= y_x() ?   y * H / M_PI_2 / K : (y > 0 ? 1:-1) * ( 1 - sigma(y)*sigma(y)/K );
+        return float2(phi, sintht);
+    }
 
     void genVertices()
     {
         for(int f=0; f<HK; f++) // loop over facets
             for(int n=0; n<Facet[f].NumVertex(); n++) // loop over all vertices in each facet
             {
-                int h = f%H, k = f/H;
-
-                // Generate coordinates relative to unit square centered at origin
-                float2 xy = Facet[f].IJ(n)/(float)Dim - float2(0.5);
-
-                // Rotate and scale square such that the width and height is one after rotation
-                xy = mat2({-1, 1, -1, -1}) / 2.0f * xy;
-
-                // Scale square
-                xy *= float2(facet_xwidth(), facet_yheight());
-
-                // Displace square
-                xy += float2(x_c(h, k), y_c(k));
+                Pixel p = {f, Facet[f].IJ(n)};
+                float2 xy = XY(p);
 
                 // Convert to spherical coordinates
-                float x = xy.x, y = xy.y;
-                float phi       = fabs(y) <= y_x() ?   x : x_c(h, k) + (x-x_c(h, k)) / sigma(y);
-                float sintht    = fabs(y) <= y_x() ?   y * H / M_PI_2 / K : (y > 0 ? 1:-1) * ( 1 - sigma(y)*sigma(y)/K );
+                float2 phiSintht = PhiSintht(xy, f);
+                float phi       = phiSintht.x;
+                float sintht    = phiSintht.y;
                 float costht    = sqrt(1 - sintht*sintht);
 
                 // Assign vertex coordinates
                 Facet[f].Vertices[n] = Origin + Radius * floatx(costht * cos(phi), costht * sin(phi), sintht);
 
+                //if (phi > M_PI) phi -= M_PI;
+                //if (phi < -M_PI) phi += M_PI;
+
                 // For testing
-                //Facet[f].Vertices[n] = floatx(-2, 0, 0, 0) + floatx(x, y, -3, 1);
-                //Facet[f].Vertices[n] = floatx(-2, 0, 0, 0) + floatx(phi, asin(sintht), -3, 1);
+                //Facet[f].Vertices[n] = Origin + floatx(x, y, 0);
+                Facet[f].Vertices[n] = Origin + floatx(phi, asin(sintht), 0);
             }
 
         // For testing
@@ -104,6 +137,8 @@ struct HEALPix : public Sphere
             for(int n=0; n<Facet[f].NumVertex(); n++)
                 if ( f != 7 ) Facet[f].Vertices[n] = floatx(0);*/
     }
+
+    /* For recovering pixel index
 
     inline float tht_x()              {   return asin((float)(K-1) / K);                          }
     inline float sigma_t(float tht)     {   return sqrt(K * (1 - abs(sin(tht))));                 }
@@ -128,7 +163,7 @@ struct HEALPix : public Sphere
     		}
             for(int k=-K; k<K; k++)
     		{
-    			float c = k * M_PI / K ;
+    			float c = k * M_PI / (K+1) ;
     			if (abs(c - tht) < abs(tht_c - tht)) tht_c = c;
     		}
 
@@ -154,8 +189,10 @@ struct HEALPix : public Sphere
         ij = mat2({-1, -1, 1, -1}) * ij;
 
         // Generate coordinates relative to unit square centered at origin
-        return (ij + float2(0.5)) * (float)Dim ;
+        return (ij + float2(0.5)) ; //* (float)Dim ;
     }
+
+    */
 
     void genNormals()
     {

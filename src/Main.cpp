@@ -60,6 +60,7 @@ MainWindow::MainWindow()
 }
 
 HEALPix<64> healpix(5.f, float3(0,0,0));
+//Quad<4> healpix;
 
 void MainWindow::initMeshItem()
 {
@@ -78,6 +79,8 @@ void MainWindow::initMeshItem()
 	shader->setParameter("pointLight.position",vec3(100, -100, 50));
 	shader->setParameter("pointLight.radiant",vec3(1e4));
 	shader->Shader::unbind();
+
+	//healpix.init();
 
 	float2 uv[healpix.NumVertex()];
 	healpix.genTerrain(uv);
@@ -218,6 +221,8 @@ void MainWindow::update()
 		+ direction;
 	rayVec = normalize(rayVec);*/
 
+		/*
+
 		Ray ray = camera-> createCameraRay(uv);
 		float3 o = ray.origin, d = normalize(ray.direction);
 		float3 w = healpix.Origin - ray.origin;
@@ -230,7 +235,9 @@ void MainWindow::update()
 		//cout << tht * 180 / M_PI << "\t" << phi * 180 / M_PI;
 		//cout << "\n";
 		cout << healpix.IJ(healpix.XY(tht, phi)) << "\n";
-		fflush(stdout);
+		//fflush(stdout);
+
+		*/
 	}
 	else if(getMouseState(Button::ButtonRight))
 	{
