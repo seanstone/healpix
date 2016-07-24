@@ -63,87 +63,49 @@ struct HEALPix : public Sphere
     inline float2 facet_xydim()     {   return float2(facet_xwidth(), facet_yheight());     }
     inline float x_c(int h, int k)  {   return h * facet_xwidth() + k * facet_xwidth_2();   }
     inline float y_c(int k)         {   return (k - (K-1)/2.0f) * facet_yheight_2();        }
-    inline float2 xy_c(int f)       {   return float2(x_c(f%H,f/H), y_c(f/H));              }
+    inline float2 uv_c(int f)
+    {
+        int h = f%H, k = f/H;
+        float uc = - h - (K-1)/4.0;
+        float vc = - h - k + (K-1)/4.0;
+        return float2(uc, vc);
+    }
     inline float y_x()              {   return M_PI_2 * (K-1) / H;                          }
     inline float sigma(float y)     {   return (K+1)/2.0f - fabs(y*H)/M_PI;                 }
 
-    float xy_c(float2 xy)
+    Pixel P(float2 xy)
     {
-        float2 xyc = xy / facet_xydim();
-        xyc = mat2({-1, -1, 1, -1}) * xyc;
-        // TODO
+        float2 uv = mat2({-1, -1, 1, -1}) * (xy / facet_xydim());
+        float2 hk = uv + float2(0.5) + float2((K-1)/4.0, -(K-1)/4.0);
+        float2 hkc = floor(hk);
+        int h = -hkc.x;
+        int k = -hkc.y - h;
+        //int a = k + h;
+        //int b = k;
+        int f = h + H * k;
+        //if (f < 0 || f > 11)
+        //cout << "h k:" << h << "  "<< k << " ";
+        float2 ij = (float)Dim * (hk - hkc);
+        //cout << "ij:" << ij << "\t";
+        return Pixel({f, ij});
     }
 
     float2 XY(Pixel p)
     {
-        // Generate coordinates relative to unit square centered at origin
-        float2 xy = (float2)p.ij/(float)Dim - float2(0.5);
-
-        // Displace square
-        xy += mat2({-1, -1, 1, -1}) * (xy_c(p.f) / facet_xydim());
-
-        // Rotate and scale square such that the width and height is one after rotation
-        xy = mat2({-1, 1, -1, -1}) / 2.0f * xy;
-
-        // Scale square
-        xy *= facet_xydim();
-
+        //cout << "f:" << p.f << " ij:" << p.ij << "\t";
+        float2 ij = p.ij;
+        //if (ij.x == 0) ij.x += 10-3;
+        //if (ij.y == 0) ij.y += 10-3;
+        //if (ij.x == Dim) ij.x -= 10-3;
+        //if (ij.y == Dim) ij.y -= 10-3;
+        float2 uv = uv_c(p.f) + (float2)ij/(float)Dim - float2(0.5);
+        float2 xy = facet_xydim() * (mat2({-1, 1, -1, -1}) / 2.0f * uv);
+        //cout << xy << "\t";
         return xy;
     }
 
-    float2 PhiSintht(float2 xy, int f)
-    {
-        int h = f%H, k = f/H;
-        float x = xy.x, y = xy.y;
-        float phi       = fabs(y) <= y_x() ?   x : x_c(h, k) + (x-x_c(h, k)) / sigma(y);
-        float sintht    = fabs(y) <= y_x() ?   y * H / M_PI_2 / K : (y > 0 ? 1:-1) * ( 1 - sigma(y)*sigma(y)/K );
-        return float2(phi, sintht);
-    }
-
-    void genVertices()
-    {
-        for(int f=0; f<HK; f++) // loop over facets
-            for(int n=0; n<Facet[f].NumVertex(); n++) // loop over all vertices in each facet
-            {
-                Pixel p = {f, Facet[f].IJ(n)};
-                float2 xy = XY(p);
-
-                // Convert to spherical coordinates
-                float2 phiSintht = PhiSintht(xy, f);
-                float phi       = phiSintht.x;
-                float sintht    = phiSintht.y;
-                float costht    = sqrt(1 - sintht*sintht);
-
-                // Assign vertex coordinates
-                Facet[f].Vertices[n] = Origin + Radius * floatx(costht * cos(phi), costht * sin(phi), sintht);
-
-                //if (phi > M_PI) phi -= M_PI;
-                //if (phi < -M_PI) phi += M_PI;
-
-                // For testing
-                //Facet[f].Vertices[n] = Origin + floatx(x, y, 0);
-                Facet[f].Vertices[n] = Origin + floatx(phi, asin(sintht), 0);
-            }
-
-        // For testing
-        /*
-        for(int n=0; n<NumVertex(); n++)
-        {
-            Vertices[n]            += Origin;
-            glm::mat4 rotation = glm::rotate((float) M_PI_2/2.f*4.f, floatx(0,1,0));
-            //Vertices[n] = rotation * Vertices[n];
-        }*/
-        /*for(int f=0; f<HK; f++)
-            for(int n=0; n<Facet[f].NumVertex(); n++)
-                if ( f != 7 ) Facet[f].Vertices[n] = floatx(0);*/
-    }
-
-    /* For recovering pixel index
-
-    inline float tht_x()              {   return asin((float)(K-1) / K);                          }
-    inline float sigma_t(float tht)     {   return sqrt(K * (1 - abs(sin(tht))));                 }
-    float tht_c;
-    float phi_c;
+    float tht_x()              {   return asin((K-1) * 1.0f / K);                          }
+    float sigma_t(float tht)     {   return sqrt(K * (1 - abs(sin(tht))));                 }
 
     float2 XY(float tht, float phi)
     {
@@ -155,7 +117,8 @@ struct HEALPix : public Sphere
         }
         else
         {
-            //float phi_c = 0;
+            float phi_c = 0;
+            float tht_c = 0;
     		for(int h=-H; h<H; h++)
     		{
     			float c = h * 2 * M_PI / H ;
@@ -175,6 +138,62 @@ struct HEALPix : public Sphere
         }
         return float2(x, y);
     }
+
+    float2 PhiSintht(float2 xy, int f)
+    {
+        int h = f%H, k = f/H;
+        float x = xy.x, y = xy.y;
+        float phi       = fabs(y) <= y_x() ?   x : x_c(h, k) + (x-x_c(h, k)) / sigma(y);
+        float sintht    = fabs(y) <= y_x() ?   y * H / M_PI_2 / K : (y > 0 ? 1:-1) * ( 1 - sigma(y)*sigma(y)/K );
+        return float2(phi, sintht);
+    }
+
+    void genVertices()
+    {
+        //int f = 4;
+        for(int f=0; f<HK; f++) // loop over facets
+            for(int n=0; n<Facet[f].NumVertex(); n++) // loop over all vertices in each facet
+            {
+                Pixel p = {f, Facet[f].IJ(n)};
+                float2 xy = XY(p);
+                //cout << "\n";
+
+                // Convert to spherical coordinates
+                float2 phiSintht = PhiSintht(xy, f);
+                float phi       = phiSintht.x;
+                float sintht    = phiSintht.y;
+                float costht    = sqrt(1 - sintht*sintht);
+
+                // Assign vertex coordinates
+                Facet[f].Vertices[n] = Origin + Radius * floatx(costht * cos(phi), costht * sin(phi), sintht);
+
+                //if (phi > M_PI) phi -= M_PI;
+                //if (phi < -M_PI) phi += M_PI;
+
+                // For testing
+                //Facet[f].Vertices[n] = Origin + floatx(x, y, 0);
+                //Facet[f].Vertices[n] = Origin + floatx(phi, asin(sintht), 0);
+            }
+
+        // For testing
+        /*
+        for(int n=0; n<NumVertex(); n++)
+        {
+            Vertices[n]            += Origin;
+            glm::mat4 rotation = glm::rotate((float) M_PI_2/2.f*4.f, floatx(0,1,0));
+            //Vertices[n] = rotation * Vertices[n];
+        }*/
+        /*for(int f=0; f<HK; f++)
+            for(int n=0; n<Facet[f].NumVertex(); n++)
+                if ( f != 4 ) Facet[f].Vertices[n] = floatx(0);*/
+    }
+
+    /* For recovering pixel index
+
+    inline float tht_x()              {   return asin((float)(K-1) / K);                          }
+    inline float sigma_t(float tht)     {   return sqrt(K * (1 - abs(sin(tht))));                 }
+    float tht_c;
+    float phi_c;
 
     float2 IJ(float2 xy)
     {

@@ -62,6 +62,8 @@ MainWindow::MainWindow()
 HEALPix<64> healpix(5.f, float3(0,0,0));
 //Quad<4> healpix;
 
+float2* texuv;
+
 void MainWindow::initMeshItem()
 {
 	bool result = true;
@@ -82,14 +84,14 @@ void MainWindow::initMeshItem()
 
 	//healpix.init();
 
-	float2 uv[healpix.NumVertex()];
-	healpix.genTerrain(uv);
+	texuv = new float2[healpix.NumVertex()];
+	healpix.genTerrain(texuv);
 	//healpix.genTextureUV(uv);
 
 	mesh = new Mesh;
 	mesh->setVertices((vec3*) healpix.Vertices, healpix.NumVertex());
 	mesh->setIndices(healpix.Indices, healpix.NumIndex());
-	mesh->setTextureCoord((vec2*)uv, healpix.NumVertex());
+	mesh->setTextureCoord((vec2*)texuv, healpix.NumVertex());
 	mesh->setNormals((vec3*) healpix.Normals, healpix.NumVertex());
 
 	Image image;
@@ -172,6 +174,8 @@ void MainWindow::render()
 	rootNode->render(camera);
 }
 
+int clickN;
+
 void MainWindow::update()
 {
 	static vec2 lastMousePos = getMousePos();
@@ -221,8 +225,6 @@ void MainWindow::update()
 		+ direction;
 	rayVec = normalize(rayVec);*/
 
-		/*
-
 		Ray ray = camera-> createCameraRay(uv);
 		float3 o = ray.origin, d = normalize(ray.direction);
 		float3 w = healpix.Origin - ray.origin;
@@ -234,15 +236,29 @@ void MainWindow::update()
 		float tht = acos(intersection.z/healpix.Radius), phi = atan2(intersection.y, intersection.x);
 		//cout << tht * 180 / M_PI << "\t" << phi * 180 / M_PI;
 		//cout << "\n";
-		cout << healpix.IJ(healpix.XY(tht, phi)) << "\n";
+		Pixel p = healpix.P(healpix.XY(tht, phi));
+		cout << p.f << " " << p.ij << "\n";
+		clickN = healpix.Facet[0].NumVertex() * p.f + healpix.Facet[0].N(p.ij);
+
+		texuv[clickN] = float2(0,0);
+
+		mesh->setTextureCoord((vec2*)texuv, healpix.NumVertex());
+
+		//shader->setParameter("clickN", clickN);
 		//fflush(stdout);
 
-		*/
 	}
 	else if(getMouseState(Button::ButtonRight))
 	{
 		//vec2 diff = mousePos - lastMousePos;
-		rotateVal += ((float)mousePos.x/WINDOW_WIDTH - 0.5) * 1e-2;
+		float2 diff = (mousePos/float2(WINDOW_WIDTH,WINDOW_HEIGHT) - float2(0.5)) * 1.f;
+		Quatf rotateVector = diff.x * camera->getUp() + diff.y * camera->getRight();
+		Quatf rotor = exp(0.03 * rotateVector);
+
+		vec3 pos =  rotor * camera->getPosition() * ~rotor;
+		camera->setPosition(pos);
+		vec3 dir =  rotor * camera->getDirection() * ~rotor;
+		camera->setDirection(dir);
 		//Transform transform;
 		//transform.rotate(vec3(0, rotateVal, 0));
 		//rootNode->setTransform(transform);

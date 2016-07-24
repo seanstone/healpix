@@ -5,6 +5,8 @@ in vec3 vertexCoord;
 in vec3 normalVec;
 in vec2 textureCoord;
 
+//in int clickN;
+
 uniform sampler2D surfaceTexture;
 
 struct PointLight
