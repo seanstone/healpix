@@ -2,15 +2,16 @@
 #define HEALPIX_H_INCLUDED
 
 #include "Quad.hpp"
+#include "Sphere.hpp"
 #include <noise/noise.h>
 
 template <int Dim, int H = 4, int K = 3>
-struct HEALPix
+struct HEALPix : public Sphere
 {
     // Data arrays
-    float3*         Vertices;
+    floatx*         Vertices;
     unsigned int*   Indices;
-    float3*         Normals;
+    floatx*         Normals;
     inline int NumVertex()      { return HK * Facet[0].NumVertex(); }
     inline int NumIndex()       { return HK * Facet[0].NumIndex(); }
 
@@ -18,17 +19,15 @@ struct HEALPix
     Quad<Dim>*      Facet;
     const int       HK          = H*K;
 
-    // Parameters
-    float           Radius;
-    float3          Origin;
-
-    HEALPix(float Radius = 1.f, float3 Origin = float3(0), float ScaleP = 1.f, float ScaleQ = 1.f) : Radius(Radius), Origin(Origin)
+    HEALPix(float radius = 1.f, floatx origin = floatx(0)) // float ScaleP = 1.f, float ScaleQ = 1.f
     {
+        Radius = radius;
+        Origin = origin;
         Facet = new Quad<Dim>[HK];
 
-        Vertices    = new float3    [Facet[0].NumVertex()*HK];
-        Indices     = new unsigned int [Facet[0].NumIndex()*HK];
-        Normals     = new float3    [Facet[0].NumVertex()*HK];
+        Vertices    = new floatx        [Facet[0].NumVertex()*HK];
+        Indices     = new unsigned int  [Facet[0].NumIndex()*HK];
+        Normals     = new floatx        [Facet[0].NumVertex()*HK];
 
         for (int f=0; f<HK; f++)
         {
@@ -86,11 +85,11 @@ struct HEALPix
                 float costht    = sqrt(1 - sintht*sintht);
 
                 // Assign vertex coordinates
-                Facet[f].Vertices[n] = Origin + Radius * float3(costht * cos(phi), costht * sin(phi), sintht);
+                Facet[f].Vertices[n] = Origin + Radius * floatx(costht * cos(phi), costht * sin(phi), sintht);
 
                 // For testing
-                //Facet[f].Vertices[n] = float3(-2, 0, 0, 0) + float3(x, y, -3, 1);
-                //Facet[f].Vertices[n] = float3(-2, 0, 0, 0) + float3(phi, asin(sintht), -3, 1);
+                //Facet[f].Vertices[n] = floatx(-2, 0, 0, 0) + floatx(x, y, -3, 1);
+                //Facet[f].Vertices[n] = floatx(-2, 0, 0, 0) + floatx(phi, asin(sintht), -3, 1);
             }
 
         // For testing
@@ -98,19 +97,19 @@ struct HEALPix
         for(int n=0; n<NumVertex(); n++)
         {
             Vertices[n]            += Origin;
-            glm::mat4 rotation = glm::rotate((float) M_PI_2/2.f*4.f, float3(0,1,0));
+            glm::mat4 rotation = glm::rotate((float) M_PI_2/2.f*4.f, floatx(0,1,0));
             //Vertices[n] = rotation * Vertices[n];
         }*/
         /*for(int f=0; f<HK; f++)
             for(int n=0; n<Facet[f].NumVertex(); n++)
-                if ( f != 7 ) Facet[f].Vertices[n] = float3(0);*/
+                if ( f != 7 ) Facet[f].Vertices[n] = floatx(0);*/
 
     }
 
     void genNormals()
     {
         for(int n=0; n<NumVertex(); n++)
-            Normals[n] = Vertices[n] - Origin;
+            Normals[n] = normalize(Vertices[n] - Origin);
     }
 
     void genTerrain(float2* uv)
@@ -123,7 +122,7 @@ struct HEALPix
 
         for(int i=0; i<NumVertex(); i++)
         {
-            float3 xyz = Vertices[i];
+            floatx xyz = Vertices[i];
             uv[i].x = terrainModule.GetValue((xyz.x+1.52)*0.50, (xyz.y+1.52)*0.50, xyz.z*0.50) *0.25 + 0.35;
             uv[i].y = uv[i].x;
         }
@@ -135,7 +134,7 @@ struct HEALPix
         for (int f=0; f<H*K; f++)
             for (int i=0; i<Facet[f].NumVertex(); i++)
             {
-                float3 xyz = -Facet[f].Vertices[i];
+                floatx xyz = -Facet[f].Vertices[i];
                 float tht = asin(xyz.y/Radius), phi = -atan2(xyz.z, xyz.x);
                 uv[f * Facet[0].NumVertex() + i].x = phi / 2 / M_PI + 0.5;
                 uv[f * Facet[0].NumVertex() + i].y = 0.5 + sin(tht) / 2; //0.5 + tht / M_PI;

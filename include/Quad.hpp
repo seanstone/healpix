@@ -3,12 +3,16 @@
 
 #include "PulsarMath.hpp"
 
+#ifndef floatx
+    #define floatx float3
+#endif
+
 template <int Dim>
 struct Quad
 {
-    float3*         Vertices;
+    floatx*         Vertices;
     unsigned int*   Indices;
-    float3*         Normals;
+    floatx*         Normals;
 
     inline int NumPixel()                   { return Dim*Dim;; }
     inline int NumVertex()                  { return (Dim+1)*(Dim+1); }
@@ -84,14 +88,14 @@ struct Quad
 
         int i = 0;
         int3 triangle, lastTraingle;
-        float3 side1, side2;
+        floatx side1, side2;
         for (int x=0; x<NumTriangleStripIndex()-2; x++)
         {
             triangle[0] = triangleStripIndex[x];
             triangle[1] = triangleStripIndex[x+1];
             triangle[2] = triangleStripIndex[x+2];
-            side1 = float3(IJ(triangle[1]) - IJ(triangle[0]), 0);
-            side2 = float3(IJ(triangle[2]) - IJ(triangle[0]), 0);
+            side1 = floatx(IJ(triangle[1]) - IJ(triangle[0]), 0);
+            side2 = floatx(IJ(triangle[2]) - IJ(triangle[0]), 0);
 
             if (1 - abs(glm::dot(side1, side2)) / (glm::length(side1) * glm::length(side2)) > 1e-7 && sort(triangle) != sort(lastTraingle))
             {
@@ -116,8 +120,9 @@ struct Quad
 
     void createBuffers()
     {
-        Vertices = new float3 [NumVertex()];
+        Vertices = new floatx [NumVertex()];
         Indices = new unsigned int [NumIndex()];
+        Normals = new floatx[NumVertex()];
     }
 
     void deleteBuffers()
@@ -130,20 +135,18 @@ struct Quad
     void genVertices()
     {
         for (int n=0; n<NumVertex(); n++)
-            Vertices[n] = float3(IJ(n).x, IJ(n).y, 0);
+            Vertices[n] = floatx(IJ(n).x, IJ(n).y, 0);
     }
 
     void genNormals()
     {
         for(int n=0; n<NumVertex(); n++)
-            Normals[n] = float3(0, 0, 1);
+            Normals[n] = floatx(0, 0, 1);
     }
 
     void init()
     {
-        Vertices = new float3[NumVertex()];
-        Indices = new unsigned int[NumIndex()];
-        Normals = new float3[NumVertex()];
+        createBuffers();
         genVertices();
         genIndices();
         genNormals();

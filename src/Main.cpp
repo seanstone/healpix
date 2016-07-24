@@ -207,8 +207,6 @@ void MainWindow::update()
 		//cout << direction.x << "\t" << direction.y << "\t" << direction.z << endl;
 	}*/
 
-
-
 	if(getMouseState(Button::ButtonLeft))
 	{
 		//cout << mousePos.x << "\t" << mousePos.y << "\n";
@@ -225,8 +223,11 @@ void MainWindow::update()
 		float3 w = healpix.Origin - ray.origin;
 		//cout << ray.origin << "\t" << ray.direction << "\n";
 		float dist = length(w - dot(w, d) * d);
-		cout << dist << "\t";
-		cout << ((dist < healpix.Radius) ? "YES" : "NO");
+		//cout << dist << "\t";
+		//cout << ((dist < healpix.Radius) ? "YES" : "NO");
+		float3 intersection = findIntersection(ray, healpix);
+		float tht = asin(intersection.z/healpix.Radius), phi = atan2(intersection.y, intersection.x);
+		cout << tht * 180 / M_PI << "\t" << phi * 180 / M_PI;
 		cout << "\n";
 	}
 	else if(getMouseState(Button::ButtonRight))
