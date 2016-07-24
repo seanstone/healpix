@@ -103,7 +103,58 @@ struct HEALPix : public Sphere
         /*for(int f=0; f<HK; f++)
             for(int n=0; n<Facet[f].NumVertex(); n++)
                 if ( f != 7 ) Facet[f].Vertices[n] = floatx(0);*/
+    }
 
+    inline float tht_x()              {   return asin((float)(K-1) / K);                          }
+    inline float sigma_t(float tht)     {   return sqrt(K * (1 - abs(sin(tht))));                 }
+    float tht_c;
+    float phi_c;
+
+    float2 XY(float tht, float phi)
+    {
+        float x, y;
+        if (abs(tht) < tht_x())
+        {
+            x = phi;
+            y = M_PI_2 * K / H * sin(tht);
+        }
+        else
+        {
+            //float phi_c = 0;
+    		for(int h=-H; h<H; h++)
+    		{
+    			float c = h * 2 * M_PI / H ;
+    			if (abs(c - phi) < abs(phi_c - phi)) phi_c = c;
+    		}
+            for(int k=-K; k<K; k++)
+    		{
+    			float c = k * M_PI / K ;
+    			if (abs(c - tht) < abs(tht_c - tht)) tht_c = c;
+    		}
+
+    		x = phi_c + (phi - phi_c) * sigma_t(tht);
+    		if (x < -M_PI) x += M_PI;
+    		if (x > M_PI) x -= M_PI;
+
+            y = (tht > 0 ? 1:-1) * M_PI / H * ( (K+1)/2.0 - sigma_t(tht) );
+        }
+        return float2(x, y);
+    }
+
+    float2 IJ(float2 xy)
+    {
+        float2 ij = xy;
+
+        ij -= float2(phi_c, tht_c);
+
+        // Scale square
+        ij /= float2(facet_xwidth(), facet_yheight());
+
+        // Rotate and scale square such that the width and height is one after rotation
+        ij = mat2({-1, -1, 1, -1}) * ij;
+
+        // Generate coordinates relative to unit square centered at origin
+        return (ij + float2(0.5)) * (float)Dim ;
     }
 
     void genNormals()

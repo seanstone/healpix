@@ -226,9 +226,11 @@ void MainWindow::update()
 		//cout << dist << "\t";
 		//cout << ((dist < healpix.Radius) ? "YES" : "NO");
 		float3 intersection = findIntersection(ray, healpix);
-		float tht = asin(intersection.z/healpix.Radius), phi = atan2(intersection.y, intersection.x);
-		cout << tht * 180 / M_PI << "\t" << phi * 180 / M_PI;
-		cout << "\n";
+		float tht = acos(intersection.z/healpix.Radius), phi = atan2(intersection.y, intersection.x);
+		//cout << tht * 180 / M_PI << "\t" << phi * 180 / M_PI;
+		//cout << "\n";
+		cout << healpix.IJ(healpix.XY(tht, phi)) << "\n";
+		fflush(stdout);
 	}
 	else if(getMouseState(Button::ButtonRight))
 	{
