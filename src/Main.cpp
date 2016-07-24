@@ -11,7 +11,7 @@ using namespace std;
 
 #include "HEALPix.hpp"
 
-#define WINDOW_WIDTH 800
+#define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 800
 
 class MainWindow : public Window
@@ -54,8 +54,9 @@ MainWindow::MainWindow()
 
 	camera = new PerspectiveCamera(vec3(0, 0, 15), vec3(0, 0, -1), vec3(0, 1, 0));
 	camera->setProjection(projection);
-	camera->setAspectRatio((float)WINDOW_WIDTH/WINDOW_HEIGHT);
-	camera->setFOV(radians(45.0f), radians(45.0f)*camera->getAspectRatio());
+	camera->setAspectRatio((float)WINDOW_WIDTH/(float)WINDOW_HEIGHT);
+	cout << "ratio: " << camera->getAspectRatio() << "\n";
+	camera->setFOV(radians(45.0f), radians(45.0f));
 }
 
 HEALPix<64> healpix(5.f, float3(0,0,0));
@@ -212,6 +213,7 @@ void MainWindow::update()
 	{
 		//cout << mousePos.x << "\t" << mousePos.y << "\n";
 		vec2 uv = mousePos / vec2(WINDOW_WIDTH, WINDOW_HEIGHT);
+		//cout << uv.x << "\t" << uv.y << "\t";
 
 		/*float4 rayVec = (uv.x*2.0f-1.0f)*right*tanf(fov.x*0.5f*camera->getpixelAspectRatio())
 		+ (1.0f-uv.y*2.0f)*up*tanf(fov.y*0.5f)
@@ -219,7 +221,7 @@ void MainWindow::update()
 	rayVec = normalize(rayVec);*/
 
 		Ray ray = camera-> createCameraRay(uv);
-		float3 o = ray.origin, d = ray.direction;
+		float3 o = ray.origin, d = normalize(ray.direction);
 		float3 w = healpix.Origin - ray.origin;
 		//cout << ray.origin << "\t" << ray.direction << "\n";
 		float dist = length(w - dot(w, d) * d);
