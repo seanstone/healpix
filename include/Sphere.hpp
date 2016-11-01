@@ -3,6 +3,9 @@
 
 #include <PulsarRay.hpp>
 
+namespace Pulsar
+{
+
 struct Sphere
 {
     float   Radius;
@@ -10,5 +13,7 @@ struct Sphere
 };
 
 float3 findIntersection(Pulsar::Ray ray, Sphere sphere);
+
+}
 
 #endif

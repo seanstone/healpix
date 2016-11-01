@@ -5,6 +5,9 @@
 #include "Sphere.hpp"
 #include <noise/noise.h>
 
+namespace Pulsar
+{
+
 struct Pixel
 {
     int f;
@@ -251,5 +254,7 @@ struct HEALPix : public Sphere
             }
     }
 };
+
+}
 
 #endif // HEALPIX_H_INCLUDED

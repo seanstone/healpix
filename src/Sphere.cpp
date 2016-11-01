@@ -1,5 +1,7 @@
 #include "Sphere.hpp"
-using namespace Pulsar;
+
+namespace Pulsar
+{
 
 float3 findIntersection(Ray ray, Sphere sphere)
 {
@@ -18,4 +20,6 @@ float3 findIntersection(Ray ray, Sphere sphere)
         return c + a * d;
     }
     else return float3(0);
+}
+
 }

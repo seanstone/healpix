@@ -7,6 +7,9 @@
     #define floatx float3
 #endif
 
+namespace Pulsar
+{
+
 template <int Dim>
 struct Quad
 {
@@ -152,5 +155,7 @@ struct Quad
         genNormals();
     }
 };
+
+}
 
 #endif // QUAD_H_INCLUDED
