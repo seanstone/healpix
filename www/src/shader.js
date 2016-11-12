@@ -1,3 +1,5 @@
+"use strict";
+
 function loadShaders(vs_path, fs_path)
 {
 	var vs_source, fs_source;

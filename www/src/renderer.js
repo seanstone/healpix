@@ -1,3 +1,5 @@
+"use strict";
+
 function Renderer()
 {
 	var shaderProgram;
@@ -8,7 +10,7 @@ function Renderer()
 		iGlobalTime,
 		iMouse;
 	// Attributes
-	var vertexPositionAttribute, vertexPositionBuffer;
+	var aVertexPosition, vertexPositionBuffer;
 
 	// Init
 	this.init = function()
@@ -33,13 +35,14 @@ function Renderer()
 	function initShaderVars()
 	{
 		// Init uniforms
-		iResolutionUniform = 	gl.getUniformLocation(shaderProgram, "iResolution");
-		iGlobalTimeUniform = 	gl.getUniformLocation(shaderProgram, "iGlobalTime");
-		iMouseUniform =  		gl.getUniformLocation(shaderProgram, "iMouse");
+		iResolution = 	gl.getUniformLocation(shaderProgram, "iResolution");
+		iGlobalTime = 	gl.getUniformLocation(shaderProgram, "iGlobalTime");
+		iMouse =  		gl.getUniformLocation(shaderProgram, "iMouse");
 
 		// Init attributes
-		vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-		gl.enableVertexAttribArray(vertexPositionAttribute);
+		aVertexPosition = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+		gl.enableVertexAttribArray(aVertexPosition);
+
 		console.log("Shader variables initialized");
 	}
 
@@ -62,7 +65,8 @@ function Renderer()
 	// Start the loop
 	this.start = function()
 	{
-		if(!shaderProgram) {
+		if(!shaderProgram)
+		{
 			document.write("</br>Failed to start render loop.</br>");
 			return null;
 		}
@@ -74,19 +78,19 @@ function Renderer()
 	// Draw on the canvas
 	function draw()
 	{
-		seconds = (new Date().getTime() - startTime) / 1000;
+		var seconds = (new Date().getTime() - startTime) / 1000;
 
 		// Clear buffers
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 		// Uniforms
-		gl.uniform3f(iResolutionUniform, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.drawingBufferWidth*1.0/gl.drawingBufferHeight);
-		gl.uniform1f(iGlobalTimeUniform, seconds);
-		gl.uniform4f(iMouseUniform, 0, 0, 0, 0); // TODO
+		gl.uniform3f(iResolution, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.drawingBufferWidth*1.0/gl.drawingBufferHeight);
+		gl.uniform1f(iGlobalTime, seconds);
+		gl.uniform4f(iMouse, 0, 0, 0, 0); // TODO: implement mouse position
 
 		// Attribute: vertexPosition
 		gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
-		gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+		gl.vertexAttribPointer(aVertexPosition, 3, gl.FLOAT, false, 0, 0);
 
 		// Draw
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
