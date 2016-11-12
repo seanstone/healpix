@@ -91,10 +91,10 @@ vec2 XY(float tht, float phi)
 vec2 XY(Pixel p)
 {
 	vec2 ij = p.ij;
-	//if (ij.x == 0) ij.x += 10-3;
-	//if (ij.y == 0) ij.y += 10-3;
-	//if (ij.x == Dim) ij.x -= 10-3;
-	//if (ij.y == Dim) ij.y -= 10-3;
+	//if (ij.x == 0) ij.x += 10e-3;
+	//if (ij.y == 0) ij.y += 10e-3;
+	//if (ij.x == Dim) ij.x -= 10e-3;
+	//if (ij.y == Dim) ij.y -= 10e-3;
 	vec2 uv = uv_c(p.f) + ij/float(Dim) - vec2(.5);
 	vec2 xy = facet_xydim() * (mat2(-1, 1, -1, -1) / 2. * uv);
 	return xy;
