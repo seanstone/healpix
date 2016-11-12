@@ -3,15 +3,16 @@
 	<head>
 		<title>Simple WebGL</title>
 		<link rel="stylesheet" type="text/css" href="canvas.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-		<script src="js/three.js"></script>
-		<script src="js/shader.js"></script>
-		<script src="js/renderer.js"></script>
-		<script src="js/main.js"></script>
-		<script>$(function(){main();});</script>
+		<script src="lib/jquery-3.1.1.slim.min.js"></script>
+		<script src="lib/babylon.js"></script>
+		<script src="lib/babylon.fireProceduralTexture.js"></script>
+		<script src="lib/babylon.starfieldProceduralTexture.js"></script>
+		<script src="lib/babylon.cloudProceduralTexture.js"></script>
+		<script src="src/main.js"></script>
+		<script>window.addEventListener('DOMContentLoaded', main);</script>
 	</head>
 
 	<body>
-  		<canvas id="glCanvas" />
+  		<canvas id="renderCanvas"/>
 	</body>
 </html>
