@@ -13,6 +13,8 @@ function main()
 
 	renderer = new Renderer();
 	renderer.init().done(function(){renderer.start();})
+
+	document.onmousemove = handleMouseMove;
 }
 
 function initWebGL(canvas)
@@ -48,4 +50,9 @@ function initTexture ()
 
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+}
+
+function handleMouseMove(event)
+{
+	document.getElementById("mousePosDiv").innerHTML = event.clientX + " " + event.clientY;
 }
