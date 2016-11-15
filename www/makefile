@@ -1,14 +1,17 @@
+INC = -I ../vector -I ./include
+EM_FLAGS = --std=c++14 -s ASYNCIFY=1
+
 .PHONY: all
 all:
-	em++ -O1 -s NO_FILESYSTEM=1 -s USE_SDL=2 src/main.cpp -o main.js
+	em++ $(EM_FLAGS) $(INC) -O1 src/main.cpp -o main.js
 
 .PHONY: release
 release:
-	em++ -O2 --closure 1 -s NO_FILESYSTEM=1 src/main.cpp -o main.js
+	em++ $(EM_FLAGS) $(INC) -O2 --closure 1 src/main.cpp -o main.js
 
 .PHONY: debug
 debug:
-	em++ -s NO_FILESYSTEM=1 src/main.cpp -o main.js
+	em++ $(EM_FLAGS) $(INC) src/main.cpp -o main.js
 
 .PHONY: clean
 clean:

@@ -4,15 +4,17 @@
 #include <math.h>
 #ifndef M_PI
 	#define M_PI 3.14159265358979
-	#define M_PI_2 M_PI/2.0
-	#define M_PI_4 M_PI/4.0
+	#define M_PI_2 (M_PI/2.)
+	#define M_PI_4 (M_PI/4.)
 #endif
 #include <string.h>
 #include <iostream>
 
 // TODO: use preprocessor directives instead
 
-template<int N, class scalar, class Derived>
+#define scalar float
+
+
 struct Vec
 {
 	/* Component */
@@ -29,33 +31,33 @@ struct Vec
 
 	/* Negative and Positive */
 
-	inline constexpr Derived& negative(int a=N-1) { return (*this)[a] = -(*this)[a], a ? negative(--a): *static_cast<Derived*>(this); }
+	inline constexpr Derived& negative(int a=N-1) { return (*this)[a] = -(*this)[a], a ? negative(--a): *this; }
 	inline constexpr friend Derived operator-(Derived rhs) { return rhs.negative(); }
 	inline constexpr friend Derived operator+(const Derived& rhs) { return rhs; }
 
 	/* Addition */
 
 	inline constexpr void add(const Derived& rhs, int a=N-1) { return (*this)[a] += rhs[a], a ? add(rhs, --a): void(); }
-	inline constexpr Derived& operator+=(const Derived& rhs) { return add(rhs), *static_cast<Derived*>(this); }
+	inline constexpr Derived& operator+=(const Derived& rhs) { return add(rhs), *this; }
   	inline constexpr friend Derived operator+(Derived lhs, const Derived& rhs) { return lhs += rhs; }
 
 	/* Subtraction */
 
 	inline constexpr void subtract(const Derived& rhs, int a=N-1) { return (*this)[a] -= rhs[a], a ? subtract(rhs, --a): void(); }
-	inline constexpr Derived& operator-=(const Derived& rhs) { return subtract(rhs),  *static_cast<Derived*>(this); }
+	inline constexpr Derived& operator-=(const Derived& rhs) { return subtract(rhs),  *this; }
 	inline constexpr friend Derived operator-(Derived lhs, const Derived& rhs) { return lhs -= rhs; }
 
 	/* Scalar multiplication */
 
 	inline constexpr void multiply(const scalar& rhs, int a=N-1) { return (*this)[a] *= rhs, a ? multiply(rhs, --a): void(); }
-	inline constexpr Derived& operator*=(const scalar& rhs) { return multiply(rhs), *static_cast<Derived*>(this); }
+	inline constexpr Derived& operator*=(const scalar& rhs) { return multiply(rhs), *this; }
 	inline constexpr friend Derived operator*(Derived lhs, const scalar& rhs) { return lhs *= rhs; }
 	inline constexpr friend Derived operator*(const scalar& lhs, Derived rhs) { return rhs *= lhs; }
 
 	/* Scalar division */
 
 	inline constexpr void divide(const scalar& rhs, int a=N-1) { return (*this)[a] /= rhs, a ? divide(rhs, --a): void(); }
-	inline constexpr Derived& operator/=(const scalar& rhs) { return divide(rhs), *static_cast<Derived*>(this); }
+	inline constexpr Derived& operator/=(const scalar& rhs) { return divide(rhs), *this; }
 	inline constexpr friend Derived operator/(Derived lhs, const scalar& rhs) { return lhs /= rhs; }
 
 	/* Comparison */

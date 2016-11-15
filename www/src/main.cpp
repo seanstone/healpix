@@ -3,7 +3,9 @@
 #include <html5.h>
 #endif
 
-#include <GL/gl.h>
+#include "renderer.hpp"
+
+Renderer renderer;
 
 void init()
 {
@@ -19,6 +21,8 @@ void init()
 
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    renderer.init();
 }
 
 int main ()
