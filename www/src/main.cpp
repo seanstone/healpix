@@ -3,6 +3,7 @@
 #include <html5.h>
 #endif
 
+#include <stdio.h>
 #include "renderer.hpp"
 
 Renderer renderer;
@@ -25,9 +26,16 @@ void init()
     renderer.init();
 }
 
+void loop()
+{
+    //renderer.draw();
+}
+
 int main ()
 {
+    printf("main()\r\n");
     init();
+    //emscripten_set_main_loop(loop, 60, 1);
 
     return 0;
 }

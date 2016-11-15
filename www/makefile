@@ -3,7 +3,7 @@ EM_FLAGS = --std=c++14 -s ASYNCIFY=1
 
 .PHONY: all
 all:
-	em++ $(EM_FLAGS) $(INC) -O1 src/main.cpp -o main.js
+	em++ $(EM_FLAGS) $(INC) -O2 src/main.cpp -o main.html
 
 .PHONY: release
 release:
