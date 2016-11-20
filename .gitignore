@@ -1,9 +1,1 @@
-bin/
 build/
-obj/
-*.o
-*.so
-
-## Windows
-*.dll
-*.exe
