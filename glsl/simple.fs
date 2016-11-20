@@ -142,15 +142,6 @@ struct Intersection
 	vec3 point;
 };
 
-Ray createCameraRay(Camera camera, vec2 uv)
-{
-	vec3 rayDir = (1. - 2. * uv.x) * tan(camera.fov * .5) * camera.right * camera.aspectRatio
-				+ (1. - 2. * uv.y) * tan(camera.fov * .5) * camera.up
-				+ camera.dir;
-	rayDir = normalize(rayDir);
-	return Ray(camera.position, rayDir);
-}
-
 Intersection findSphereIntersection(Sphere sphere, Ray ray)
 {	/* https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection */
 	vec3 c = sphere.origin;
@@ -163,6 +154,15 @@ Intersection findSphereIntersection(Sphere sphere, Ray ray)
 	float a = dot(l,c-o) + sqrt(D);
 	if (a < 0.) return Intersection(false, vec3(0));
 	return Intersection(true, o + a*l);
+}
+
+Ray createCameraRay(Camera camera, vec2 uv)
+{
+	vec3 rayDir = (1. - 2. * uv.x) * tan(camera.fov * .5) * camera.right * camera.aspectRatio
+				+ (1. - 2. * uv.y) * tan(camera.fov * .5) * camera.up
+				+ camera.dir;
+	rayDir = normalize(rayDir);
+	return Ray(camera.position, rayDir);
 }
 
 void main()
