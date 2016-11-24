@@ -39,7 +39,7 @@ else()
 endif()
 if(EMSCRIPTEN)
 	# see https://github.com/kripken/emscripten/blob/master/src/settings.js
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --llvm-lto 0 -s NO_EXIT_RUNTIME=1 -s USE_SDL=2 -s USE_LIBPNG=1 -s USE_ZLIB=1")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --llvm-lto 0 -s NO_EXIT_RUNTIME=1 -s USE_SDL=2 -s USE_LIBPNG=1 -s USE_ZLIB=1 -l${CMAKE_SOURCE_DIR}/lib/libnoise/src/noise/libnoise.so")
 	if(NOT DEBUG_MODE)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --closure 1")
 	endif()
