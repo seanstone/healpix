@@ -1,15 +1,14 @@
-// #define WEBGL
-// #ifdef WEBGL
+#version 330 core
+//#define WEBGL
+#ifdef WEBGL
 precision mediump float;
-// #else
-// //#version 330 core
-// #endif
+#endif
 
 uniform mat4 transformMatrix;
 uniform mat4 cameraMatrix;
 uniform mat4 projectionMatrix;
 
-// #ifdef WEBGL
+#ifdef WEBGL
 
 attribute vec3 position;
 attribute vec2 textCoord;
@@ -19,17 +18,17 @@ varying vec3 vertexCoord;
 varying vec2 textureCoord;
 varying vec3 normalVec;
 
-// #else
-//
-// layout (location = 0) in vec3 position;
-// layout (location = 1) in vec2 textCoord;
-// layout (location = 2) in vec3 normal;
-//
-// out vec3 vertexCoord;
-// out vec2 textureCoord;
-// out vec3 normalVec;
-//
-// #en//dif
+#else
+
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 textCoord;
+layout (location = 2) in vec3 normal;
+
+out vec3 vertexCoord;
+out vec2 textureCoord;
+out vec3 normalVec;
+
+#endif
 
 void main()
 {

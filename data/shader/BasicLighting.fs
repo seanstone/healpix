@@ -1,8 +1,7 @@
-#define WEBGL
+#version 330 core
+//#define WEBGL
 #ifdef WEBGL
 precision mediump float;
-#else
-//#version 330 core
 #endif
 
 #ifdef WEBGL
