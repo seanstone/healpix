@@ -68,8 +68,8 @@ void MainWindow::initMeshItem()
 {
 	bool result = true;
 	shader = new ThreeDShader;
-	result &= shader->addVertexShader(File::readAllText("data/shader/test.vs"));
-	result &= shader->addFragmentShader(File::readAllText("data/shader/BasicLighting2.fs"));
+	result &= shader->addVertexShader(File::readAllText("glsl/simple.vs"));
+	result &= shader->addFragmentShader(File::readAllText("glsl/simple.fs"));
 	result &= shader->compile();
 	if(result == false)
 	{
@@ -214,16 +214,16 @@ void MainWindow::update()
 		//cout << direction.x << "\t" << direction.y << "\t" << direction.z << endl;
 	}*/
 
-	if(getMouseState(Button::ButtonLeft))
+	/*if(getMouseState(Button::ButtonLeft))
 	{
 		//cout << mousePos.x << "\t" << mousePos.y << "\n";
 		vec2 uv = mousePos / vec2(WINDOW_WIDTH, WINDOW_HEIGHT);
 		//cout << uv.x << "\t" << uv.y << "\t";
 
-		/*float4 rayVec = (uv.x*2.0f-1.0f)*right*tanf(fov.x*0.5f*camera->getpixelAspectRatio())
-		+ (1.0f-uv.y*2.0f)*up*tanf(fov.y*0.5f)
-		+ direction;
-	rayVec = normalize(rayVec);*/
+	// 	float4 rayVec = (uv.x*2.0f-1.0f)*right*tanf(fov.x*0.5f*camera->getpixelAspectRatio())
+	// 	+ (1.0f-uv.y*2.0f)*up*tanf(fov.y*0.5f)
+	// 	+ direction;
+	// rayVec = normalize(rayVec);
 
 		Ray ray = camera-> createCameraRay(uv);
 		float3 o = ray.origin, d = normalize(ray.direction);
@@ -248,7 +248,7 @@ void MainWindow::update()
 		//fflush(stdout);
 
 	}
-	else if(getMouseState(Button::ButtonRight))
+	else*/ if(getMouseState(Button::ButtonRight))
 	{
 		//vec2 diff = mousePos - lastMousePos;
 		float2 diff = (mousePos/float2(WINDOW_WIDTH,WINDOW_HEIGHT) - float2(0.5)) * 1.f;
