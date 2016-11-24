@@ -33,7 +33,7 @@ out vec3 normalVec;
 void main()
 {
 	gl_Position = projectionMatrix*cameraMatrix*transformMatrix*vec4(position,1.0);
-	//textureCoord = textCoord;
+	textureCoord = textCoord;
 	normalVec = (transformMatrix*vec4(normal,0.0)).xyz;
-	// vertexCoord = (transformMatrix*vec4(position,1.0)).xyz;
+	vertexCoord = (transformMatrix*vec4(position,1.0)).xyz;
 }

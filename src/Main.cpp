@@ -33,10 +33,10 @@ protected:
 	PerspectiveCamera* camera;
 	SceneNode* rootNode;
 	SceneMeshItem* meshItem;
-	SceneModelItem* modelItem;
+	// SceneModelItem* modelItem;
 
 	void initMeshItem();
-	void initModelItem();
+	// void initModelItem();
 };
 
 MainWindow::MainWindow()
@@ -110,30 +110,30 @@ void MainWindow::initMeshItem()
 	rootNode->addItem(meshItem);
 }
 
-void MainWindow::initModelItem()
-{
-	bool result = true;
-	normalShader = new ThreeDShader;
-	result &= normalShader->addVertexShader(File::readAllText("data/shader/test.vs"));
-	result &= normalShader->addFragmentShader(File::readAllText("data/shader/BasicLighting.fs"));
-	result &= normalShader->compile();
-	if(result == false)
-	{
-		terminate();
-		exit(0);
-	}
-
-	normalShader->Shader::bind();
-	normalShader->setParameter("pointLight.position",vec3(3, 2, 0));
-	normalShader->setParameter("pointLight.radiant",vec3(3.0f));
-	normalShader->Shader::unbind();
-
-	model = new Model;
-	model->load("data/model/monkey.obj");
-
-	modelItem = new SceneModelItem(model, normalShader);
-	rootNode->addItem(modelItem);
-}
+// void MainWindow::initModelItem()
+// {
+// 	bool result = true;
+// 	normalShader = new ThreeDShader;
+// 	result &= normalShader->addVertexShader(File::readAllText("data/shader/test.vs"));
+// 	result &= normalShader->addFragmentShader(File::readAllText("data/shader/BasicLighting.fs"));
+// 	result &= normalShader->compile();
+// 	if(result == false)
+// 	{
+// 		terminate();
+// 		exit(0);
+// 	}
+//
+// 	normalShader->Shader::bind();
+// 	normalShader->setParameter("pointLight.position",vec3(3, 2, 0));
+// 	normalShader->setParameter("pointLight.radiant",vec3(3.0f));
+// 	normalShader->Shader::unbind();
+//
+// 	model = new Model;
+// 	model->load("data/model/monkey.obj");
+//
+// 	modelItem = new SceneModelItem(model, normalShader);
+// 	rootNode->addItem(modelItem);
+// }
 
 MainWindow::~MainWindow()
 {
@@ -273,7 +273,7 @@ void MainWindow::update()
 int main()
 {
 	MainWindow window;
-	window.loop();
+	window.startLoop();
 	window.terminate();
 
 	return 0;
