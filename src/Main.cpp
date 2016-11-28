@@ -46,7 +46,8 @@ MainWindow::MainWindow()
 	createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Earth");
 
 	renderer.init();
-	renderer.setClearColor(vec3(0, 0, 0.1));
+	renderer.setClearColor(vec3(0, 0, 0.5));
+	//renderer.setClearColor(vec3(0, 0, 0.1));
 
 	initMeshItem();
 	//initModelItem();
@@ -103,7 +104,8 @@ void MainWindow::initMeshItem()
 
 	texture = new Texture;
 	texture->load(&image);
-	texture->enableMipmap(true);
+	texture->enableMipmap(false);
+	//texture->enableMipmap(true);
 	shader->setTexture(texture);
 
 	rootNode = new SceneNode;

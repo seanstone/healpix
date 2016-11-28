@@ -21,7 +21,9 @@ include_directories(lib/libnoise/noiseutils)
 
 # Dependencies
 add_subdirectory(PulsarEngine)
+if(EMSCRIPTEN)
 add_subdirectory(lib/libnoise)
+endif()
 
 # Sources
 file(GLOB SOURCES "src/*.cpp")
