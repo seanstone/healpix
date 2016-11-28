@@ -216,7 +216,7 @@ void MainWindow::update()
 		//cout << direction.x << "\t" << direction.y << "\t" << direction.z << endl;
 	}*/
 
-	if(getMouseState(Button::ButtonLeft))
+	/*if(getMouseState(Button::ButtonLeft))
 	{
 	// 	//cout << mousePos.x << "\t" << mousePos.y << "\n";
 	// 	vec2 uv = mousePos / vec2(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -245,27 +245,25 @@ void MainWindow::update()
 	// 	texuv[clickN] = float2(0,0);
 	//
 	// 	mesh->setTextureCoord((vec2*)texuv, healpix.NumVertex());
-
 		//shader->setParameter("clickN", clickN);
 		//fflush(stdout);
-
-	}
-	else if(getMouseState(Button::ButtonRight))
-	{
-		//vec2 diff = mousePos - lastMousePos;
-		float2 diff = (mousePos/float2(WINDOW_WIDTH,WINDOW_HEIGHT) - float2(0.5)) * 1.f;
-		Quatf rotateVector = diff.x * camera->getUp() + diff.y * camera->getRight();
-		Quatf rotor = exp(0.03 * rotateVector);
-
-		vec3 pos =  rotor * camera->getPosition() * ~rotor;
-		camera->setPosition(pos);
-		vec3 dir =  rotor * camera->getDirection() * ~rotor;
-		camera->setDirection(dir);
-		//Transform transform;
-		//transform.rotate(vec3(0, rotateVal, 0));
-		//rootNode->setTransform(transform);
-		//rootNode->render(camera);
-	}
+	// }
+	// else if(getMouseState(Button::ButtonRight))
+	// {
+	// 	//vec2 diff = mousePos - lastMousePos;
+	// 	float2 diff = (mousePos/float2(WINDOW_WIDTH,WINDOW_HEIGHT) - float2(0.5)) * 1.f;
+	// 	Quatf rotateVector = diff.x * camera->getUp() + diff.y * camera->getRight();
+	// 	Quatf rotor = exp(0.03 * rotateVector);
+	//
+	// 	vec3 pos =  rotor * camera->getPosition() * ~rotor;
+	// 	camera->setPosition(pos);
+	// 	vec3 dir =  rotor * camera->getDirection() * ~rotor;
+	// 	camera->setDirection(dir);
+	// 	//Transform transform;
+	// 	//transform.rotate(vec3(0, rotateVal, 0));
+	// 	//rootNode->setTransform(transform);
+	// 	//rootNode->render(camera);
+	// }
 
 	lastMousePos = mousePos;
 
