@@ -12,7 +12,7 @@ struct Sphere
     float3  Origin;
 };
 
-float3 findIntersection(Pulsar::Ray ray, Sphere sphere);
+// float3 findIntersection(Pulsar::Ray ray, Sphere sphere);
 
 }
 

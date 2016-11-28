@@ -1,6 +1,7 @@
 #include <Pulsar.hpp>
 #include <PulsarMesh.hpp>
 #include <PulsarShader.hpp>
+#include <ThreeDShader.hpp>
 #include <PulsarScene.hpp>
 #include <PulsarWindow.hpp>
 using namespace Pulsar;
@@ -17,6 +18,7 @@ using namespace std;
 class MainWindow : public Window
 {
 public:
+
 	MainWindow();
 	~MainWindow();
 	void render();
@@ -69,7 +71,7 @@ void MainWindow::initMeshItem()
 	bool result = true;
 	shader = new ThreeDShader;
 	result &= shader->addVertexShader(File::readAllText("data/shader/test.vs"));
-	result &= shader->addFragmentShader(File::readAllText("data/shader/BasicLighting2.fs"));
+	result &= shader->addFragmentShader(File::readAllText("data/shader/BasicLighting.fs"));
 	result &= shader->compile();
 	if(result == false)
 	{
@@ -216,33 +218,33 @@ void MainWindow::update()
 
 	if(getMouseState(Button::ButtonLeft))
 	{
-		//cout << mousePos.x << "\t" << mousePos.y << "\n";
-		vec2 uv = mousePos / vec2(WINDOW_WIDTH, WINDOW_HEIGHT);
-		//cout << uv.x << "\t" << uv.y << "\t";
-
-		/*float4 rayVec = (uv.x*2.0f-1.0f)*right*tanf(fov.x*0.5f*camera->getpixelAspectRatio())
-		+ (1.0f-uv.y*2.0f)*up*tanf(fov.y*0.5f)
-		+ direction;
-	rayVec = normalize(rayVec);*/
-
-		Ray ray = camera-> createCameraRay(uv);
-		float3 o = ray.origin, d = normalize(ray.direction);
-		float3 w = healpix.Origin - ray.origin;
-		//cout << ray.origin << "\t" << ray.direction << "\n";
-		float dist = length(w - dot(w, d) * d);
-		//cout << dist << "\t";
-		//cout << ((dist < healpix.Radius) ? "YES" : "NO");
-		float3 intersection = findIntersection(ray, healpix);
-		float tht = acos(intersection.z/healpix.Radius), phi = atan2(intersection.y, intersection.x);
-		//cout << tht * 180 / M_PI << "\t" << phi * 180 / M_PI;
-		//cout << "\n";
-		Pixel p = healpix.P(healpix.XY(tht, phi));
-		cout << p.f << " " << p.ij << "\n";
-		clickN = healpix.Facet[0].NumVertex() * p.f + healpix.Facet[0].N(p.ij);
-
-		texuv[clickN] = float2(0,0);
-
-		mesh->setTextureCoord((vec2*)texuv, healpix.NumVertex());
+	// 	//cout << mousePos.x << "\t" << mousePos.y << "\n";
+	// 	vec2 uv = mousePos / vec2(WINDOW_WIDTH, WINDOW_HEIGHT);
+	// 	//cout << uv.x << "\t" << uv.y << "\t";
+	//
+	// 	/*float4 rayVec = (uv.x*2.0f-1.0f)*right*tanf(fov.x*0.5f*camera->getpixelAspectRatio())
+	// 	+ (1.0f-uv.y*2.0f)*up*tanf(fov.y*0.5f)
+	// 	+ direction;
+	// rayVec = normalize(rayVec);*/
+	//
+	// 	Ray ray = camera-> createCameraRay(uv);
+	// 	float3 o = ray.origin, d = normalize(ray.direction);
+	// 	float3 w = healpix.Origin - ray.origin;
+	// 	//cout << ray.origin << "\t" << ray.direction << "\n";
+	// 	float dist = length(w - dot(w, d) * d);
+	// 	//cout << dist << "\t";
+	// 	//cout << ((dist < healpix.Radius) ? "YES" : "NO");
+	// 	float3 intersection = findIntersection(ray, healpix);
+	// 	float tht = acos(intersection.z/healpix.Radius), phi = atan2(intersection.y, intersection.x);
+	// 	//cout << tht * 180 / M_PI << "\t" << phi * 180 / M_PI;
+	// 	//cout << "\n";
+	// 	Pixel p = healpix.P(healpix.XY(tht, phi));
+	// 	cout << p.f << " " << p.ij << "\n";
+	// 	clickN = healpix.Facet[0].NumVertex() * p.f + healpix.Facet[0].N(p.ij);
+	//
+	// 	texuv[clickN] = float2(0,0);
+	//
+	// 	mesh->setTextureCoord((vec2*)texuv, healpix.NumVertex());
 
 		//shader->setParameter("clickN", clickN);
 		//fflush(stdout);
