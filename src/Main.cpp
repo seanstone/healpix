@@ -1,6 +1,7 @@
 #include <Pulsar.hpp>
 #include <PulsarMesh.hpp>
 #include <PulsarShader.hpp>
+#include <ThreeDShader.hpp>
 #include <PulsarScene.hpp>
 #include <PulsarWindow.hpp>
 using namespace Pulsar;
@@ -17,6 +18,7 @@ using namespace std;
 class MainWindow : public Window
 {
 public:
+
 	MainWindow();
 	~MainWindow();
 	void render();
@@ -216,14 +218,23 @@ void MainWindow::update()
 
 	// if(getMouseState(Button::ButtonLeft))
 	// {
+	/*if(getMouseState(Button::ButtonLeft))
+	{
+>>>>>>> www
 	// 	//cout << mousePos.x << "\t" << mousePos.y << "\n";
 	// 	vec2 uv = mousePos / vec2(WINDOW_WIDTH, WINDOW_HEIGHT);
 	// 	//cout << uv.x << "\t" << uv.y << "\t";
 	//
+<<<<<<< HEAD
 	// // 	float4 rayVec = (uv.x*2.0f-1.0f)*right*tanf(fov.x*0.5f*camera->getpixelAspectRatio())
 	// // 	+ (1.0f-uv.y*2.0f)*up*tanf(fov.y*0.5f)
 	// // 	+ direction;
 	// // rayVec = normalize(rayVec);
+=======
+	// 	/*float4 rayVec = (uv.x*2.0f-1.0f)*right*tanf(fov.x*0.5f*camera->getpixelAspectRatio())
+	// 	+ (1.0f-uv.y*2.0f)*up*tanf(fov.y*0.5f)
+	// 	+ direction;
+	// rayVec = normalize(rayVec);*/
 	//
 	// 	Ray ray = camera-> createCameraRay(uv);
 	// 	float3 o = ray.origin, d = normalize(ray.direction);
@@ -247,6 +258,8 @@ void MainWindow::update()
 	// 	//shader->setParameter("clickN", clickN);
 	// 	//fflush(stdout);
 	//
+		//shader->setParameter("clickN", clickN);
+		//fflush(stdout);
 	// }
 	// else if(getMouseState(Button::ButtonRight))
 	// {
