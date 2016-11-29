@@ -3,7 +3,6 @@ cmake_minimum_required (VERSION 2.6)
 project(Earth)
 
 # Options
-option(DEBUG_MODE off)
 option(EMSCRIPTEN off)
 
 # Check if Emscripten
@@ -19,18 +18,13 @@ include_directories(lib/libnoise/src)
 include_directories(lib/libnoise/noiseutils)
 
 # Compile flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -fopenmp -Wall")
-if(DEBUG_MODE)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O -g")
-else()
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math")
-endif()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -fopenmp -Wall -O3 -ffast-math")
 if(EMSCRIPTEN)
 	# see https://github.com/kripken/emscripten/blob/master/src/settings.js
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --llvm-lto 0  -s ALLOW_MEMORY_GROWTH=1 -s NO_EXIT_RUNTIME=1 -s USE_SDL=2 -s USE_LIBPNG=1 -s USE_ZLIB=1")
-	if(NOT DEBUG_MODE)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --closure 1")
-	endif()
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+		--closure 1 --llvm-lto 0 \
+		-s NO_EXIT_RUNTIME=1 -s ALLOW_MEMORY_GROWTH=1 \
+		-s USE_SDL=2 -s USE_LIBPNG=1 -s USE_ZLIB=1")
 endif()
 
 # Output directories
