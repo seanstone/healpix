@@ -1,7 +1,7 @@
 #include <Pulsar.hpp>
-#include <PulsarMesh.hpp>
+// #include <PulsarMesh.hpp>
 #include <PulsarShader.hpp>
-#include <ThreeDShader.hpp>
+// #include <ThreeDShader.hpp>
 #include <PulsarScene.hpp>
 #include <PulsarWindow.hpp>
 using namespace Pulsar;
@@ -10,7 +10,10 @@ using namespace Pulsar;
 #include <string>
 using namespace std;
 
-#include "HEALPix.hpp"
+#include <PulsarCanvas.hpp>
+#include "CanvasShader.hpp"
+
+// #include "HEALPix.hpp"
 
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 800
@@ -27,14 +30,15 @@ public:
 
 protected:
 	Renderer renderer;
-	Mesh* mesh;
-	Model* model;
-	ThreeDShader* shader;
-	ThreeDShader* normalShader;
-	Texture* texture;
-	PerspectiveCamera* camera;
-	SceneNode* rootNode;
-	SceneMeshItem* meshItem;
+	// Mesh* mesh;
+	// Model* model;
+	CanvasShader* shader;
+	Canvas* canvas;
+	// ThreeDShader* normalShader;
+	// Texture* texture;
+	// PerspectiveCamera* camera;
+	// SceneNode* rootNode;
+	// SceneMeshItem* meshItem;
 	// SceneModelItem* modelItem;
 
 	void initMeshItem();
@@ -52,27 +56,27 @@ MainWindow::MainWindow()
 	initMeshItem();
 	//initModelItem();
 
-	Projection projection;
-	projection.setProjection(radians(45.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.01f, 50.0f);
-
-	camera = new PerspectiveCamera(vec3(0, 0, 15), vec3(0, 0, -1), vec3(0, 1, 0));
-	camera->setProjection(projection);
-	camera->setAspectRatio((float)WINDOW_WIDTH/(float)WINDOW_HEIGHT);
-	cout << "ratio: " << camera->getAspectRatio() << "\n";
-	camera->setFOV(radians(45.0f), radians(45.0f));
+	// Projection projection;
+	// projection.setProjection(radians(45.0f), WINDOW_WIDTH, WINDOW_HEIGHT, 0.01f, 50.0f);
+	//
+	// camera = new PerspectiveCamera(vec3(0, 0, 15), vec3(0, 0, -1), vec3(0, 1, 0));
+	// camera->setProjection(projection);
+	// camera->setAspectRatio((float)WINDOW_WIDTH/(float)WINDOW_HEIGHT);
+	// cout << "ratio: " << camera->getAspectRatio() << "\n";
+	// camera->setFOV(radians(45.0f), radians(45.0f));
 }
 
-HEALPix<64> healpix(5.f, float3(0,0,0));
+// HEALPix<64> healpix(5.f, float3(0,0,0));
 //Quad<4> healpix;
 
-float2* texuv;
+// float2* texuv;
 
 void MainWindow::initMeshItem()
 {
 	bool result = true;
-	shader = new ThreeDShader;
-	result &= shader->addVertexShader(File::readAllText("data/shader/test.vs"));
-	result &= shader->addFragmentShader(File::readAllText("data/shader/BasicLighting.fs"));
+	shader = new CanvasShader;
+	result &= shader->addVertexShader(File::readAllText("data/shader/simple.vs"));
+	result &= shader->addFragmentShader(File::readAllText("data/shader/simple.fs"));
 	result &= shader->compile();
 	if(result == false)
 	{
@@ -80,38 +84,41 @@ void MainWindow::initMeshItem()
 		exit(0);
 	}
 
-	shader->Shader::bind();
-	shader->setParameter("pointLight.position",vec3(100, -100, 50));
-	shader->setParameter("pointLight.radiant",vec3(1e4));
-	shader->Shader::unbind();
+	canvas = new Canvas;
+	canvas->setVertices();
+
+	// shader->Shader::bind();
+	// shader->setParameter("pointLight.position",vec3(100, -100, 50));
+	// shader->setParameter("pointLight.radiant",vec3(1e4));
+	// shader->Shader::unbind();
 
 	//healpix.init();
 
-	texuv = new float2[healpix.NumVertex()];
-	healpix.genTerrain(texuv);
+	// texuv = new float2[healpix.NumVertex()];
+	// healpix.genTerrain(texuv);
 	//healpix.genTextureUV(uv);
 
-	mesh = new Mesh;
-	mesh->setVertices((vec3*) healpix.Vertices, healpix.NumVertex());
-	mesh->setIndices(healpix.Indices, healpix.NumIndex());
-	mesh->setTextureCoord((vec2*)texuv, healpix.NumVertex());
-	mesh->setNormals((vec3*) healpix.Normals, healpix.NumVertex());
+	// mesh = new Mesh;
+	// mesh->setVertices((vec3*) healpix.Vertices, healpix.NumVertex());
+	// mesh->setIndices(healpix.Indices, healpix.NumIndex());
+	// mesh->setTextureCoord((vec2*)texuv, healpix.NumVertex());
+	// mesh->setNormals((vec3*) healpix.Normals, healpix.NumVertex());
 
-	Image image;
-	image.load("data/texture/earth.png");
-	//image.load("data/texture/gas_giant_stock_texture_by_enderion.png");
-	//image.load("data/texture/earth-large-with-ocean-mask.png");
+	// Image image;
+	// image.load("data/texture/earth.png");
+	// //image.load("data/texture/gas_giant_stock_texture_by_enderion.png");
+	// //image.load("data/texture/earth-large-with-ocean-mask.png");
+	//
+	// texture = new Texture;
+	// texture->load(&image);
+	// texture->enableMipmap(false);
+	// //texture->enableMipmap(true);
+	// shader->setTexture(texture);
 
-	texture = new Texture;
-	texture->load(&image);
-	texture->enableMipmap(false);
-	//texture->enableMipmap(true);
-	shader->setTexture(texture);
-
-	rootNode = new SceneNode;
-	meshItem = new SceneMeshItem(mesh);
-	meshItem->setShader(shader);
-	rootNode->addItem(meshItem);
+	// rootNode = new SceneNode;
+	// meshItem = new SceneMeshItem(mesh);
+	// meshItem->setShader(shader);
+	// rootNode->addItem(meshItem);
 }
 
 // void MainWindow::initModelItem()
@@ -142,69 +149,71 @@ void MainWindow::initMeshItem()
 MainWindow::~MainWindow()
 {
 	delete shader;
-	delete mesh;
-	delete texture;
-	delete meshItem;
+	// delete mesh;
+	// delete texture;
+	// delete meshItem;
 
 	//delete normalShader;
 	//delete model;
 	//delete modelItem;
 
-	delete camera;
-	delete rootNode;
+	// delete camera;
+	// delete rootNode;
 }
 
-float rotateVal = 0;
-float rotateValY = 0;
+// float rotateVal = 0;
+// float rotateValY = 0;
 
 void MainWindow::render()
 {
 	renderer.clearScreen();
 	renderer.initFrame();
 
-	static float val = 0;
-	static float scal = 1;
+	// static float val = 0;
+	// static float scal = 1;
 
-	Transform transform;
+	// Transform transform;
 
 	//transform.scale(vec3(1,1,1));
 	//transform.translate(vec3(0,0,0));
 	//transform.rotate(vec3(cos(val*3.14)*3.14,sin(val*3.14)*3.14,0));
-	transform.rotate(vec3(rotateValY*3.14f, rotateVal*3.14f, 0));
+	// transform.rotate(vec3(rotateValY*3.14f, rotateVal*3.14f, 0));
+	//
+	// rootNode->setTransform(transform);
 
-	rootNode->setTransform(transform);
-
-	val += 0.004*scal;
-	rootNode->render(camera);
+	// val += 0.004*scal;
+	// rootNode->render(camera);
+	shader->bind();
+	canvas->render();
 }
 
-int clickN;
+// int clickN;
 
 void MainWindow::update()
 {
-	static vec2 lastMousePos = getMousePos();
-
-	float moveSpeed = 0.025;
-	//Move Camera
-	if(getKeyState(Key::W) == true)
-		camera->move(camera->getDirection()*moveSpeed);
-	if(getKeyState(Key::S) == true)
-		camera->move(-camera->getDirection()*moveSpeed);
-	if(getKeyState(Key::D) == true)
-		camera->move(camera->getRight()*moveSpeed);
-	if(getKeyState(Key::A) == true)
-		camera->move(-camera->getRight()*moveSpeed);
-	if(getKeyState(Key::E) == true)
-		camera->move(camera->getUp()*moveSpeed);
-	if(getKeyState(Key::C) == true)
-		camera->move(-camera->getUp()*moveSpeed);
+	// static vec2 lastMousePos = getMousePos();
+	//
+	// float moveSpeed = 0.025;
+	// //Move Camera
+	// if(getKeyState(Key::W) == true)
+	// 	camera->move(camera->getDirection()*moveSpeed);
+	// if(getKeyState(Key::S) == true)
+	// 	camera->move(-camera->getDirection()*moveSpeed);
+	// if(getKeyState(Key::D) == true)
+	// 	camera->move(camera->getRight()*moveSpeed);
+	// if(getKeyState(Key::A) == true)
+	// 	camera->move(-camera->getRight()*moveSpeed);
+	// if(getKeyState(Key::E) == true)
+	// 	camera->move(camera->getUp()*moveSpeed);
+	// if(getKeyState(Key::C) == true)
+	// 	camera->move(-camera->getUp()*moveSpeed);
 
 	//if(getKeyState(Key::Esc) == true)
 	// 	exit(0);
 
 	//Mouse movements
 
-	vec2 mousePos = getMousePos();
+	// vec2 mousePos = getMousePos();
 	/*if(getMouseState(Button::ButtonLeft))
 	{
 		vec2 diff = mousePos - lastMousePos;
@@ -280,7 +289,7 @@ void MainWindow::update()
 	// 	//rootNode->render(camera);
 	// }
 
-	lastMousePos = mousePos;
+	// lastMousePos = mousePos;
 
 	//cout << camera->getPosition().y << endl;
 }
