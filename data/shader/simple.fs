@@ -1,6 +1,6 @@
 precision mediump float;
-vec3 iResolution = vec3(1200., 800., 1200./800.);
-//uniform vec3 	iResolution;
+// vec3 iResolution = vec3(1200., 800., 1200./800.);
+uniform vec3 iResolution;
 // uniform float 	iGlobalTime;
 // uniform vec4 	iMouse;
 

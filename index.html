@@ -4,8 +4,9 @@
 		<title>PulsarEngine Example</title>
 		<style>
             * { margin:0; padding:none; color: white; border: 0px none }
-            html, body { width:100%; height:100%; overflow: hidden; }
-            canvas { display:block; width:100%; height:100%; z-index: 1; }
+            html, body { width:100%; height:100%; overflow: hidden; font-family:sans-serif; }
+            canvas { display:block; width:100%; height:100%; z-index: 0; }
+			#mousepos { position:absolute; right:5%; top:5%; z-index:1; }
         </style>
 		<script>
 			var Module = {};
@@ -15,6 +16,7 @@
 		<script src="dist/earth.js"></script>
 	</head>
 	<body>
-  		<canvas id="canvas"/></canvas>
+  		<canvas id="canvas"></canvas>
+		<div id="mousepos">0, 0</div>
 	</body>
 </html>
