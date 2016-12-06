@@ -23,7 +23,7 @@ if(EMSCRIPTEN)
 	# see https://github.com/kripken/emscripten/blob/master/src/settings.js
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
 		--closure 1 --llvm-lto 0 \
-		-s NO_EXIT_RUNTIME=1 -s ALLOW_MEMORY_GROWTH=1 \
+		-s NO_EXIT_RUNTIME=1 -s ALLOW_MEMORY_GROWTH=0 \
 		-s USE_SDL=2 -s USE_LIBPNG=1 -s USE_ZLIB=1")
 endif()
 
