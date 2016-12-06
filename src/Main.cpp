@@ -53,7 +53,14 @@ EM_BOOL MouseHandler(int eventType, const EmscriptenMouseEvent *mouseEvent, void
 	{
 		case EMSCRIPTEN_EVENT_MOUSEMOVE:
 		{
-			x = mouseEvent->clientX; y = mouseEvent->clientY;
+			emscripten_get_canvas_size(&width, &height, &isFullscreen);
+			glViewport(0, 0, width, height);
+			window.shader->setParameter("iResolution", vec3(width, height, float(width)/height));
+			camera.resolution = vec2(width, height);
+			camera.aspectRatio = (double) width / (double) height;
+
+			
+			x = mouseEvent->clientX; y = height - mouseEvent->clientY;
 			EM_ASM_( {document.getElementById("mousepos").innerHTML = $0 + ", " + $1; }, x, y);
 			Ray ray = createCameraRay(camera, vec2((float) x / (float) width, (float) y / (float) height));
 			Intersection intersection = findSphereIntersection(sphere, ray);
@@ -114,12 +121,7 @@ MainWindow::MainWindow()
 	#ifdef __EMSCRIPTEN__
 	emscripten_get_canvas_size(&width, &height, &isFullscreen);
 	shader->setParameter("iResolution", vec3(width, height, float(width)/height));
-	emscripten_set_resize_callback(0, 0, true, ResizeHandler);
-	emscripten_set_mousedown_callback(0, 0, true, MouseHandler);
-	emscripten_set_mouseup_callback(0, 0, true, MouseHandler);
-	emscripten_set_mousemove_callback(0, 0, true, MouseHandler);
 	#endif
-
 }
 
 MainWindow::~MainWindow()
@@ -142,6 +144,12 @@ void MainWindow::update()
 int main()
 {
 	init_vars();
+	#ifdef __EMSCRIPTEN__
+	emscripten_set_resize_callback(0, 0, true, ResizeHandler);
+	emscripten_set_mousedown_callback(0, 0, true, MouseHandler);
+	emscripten_set_mouseup_callback(0, 0, true, MouseHandler);
+	emscripten_set_mousemove_callback(0, 0, true, MouseHandler);
+	#endif
 	window.startLoop();
 	window.terminate();
 	return 0;
